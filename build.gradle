@@ -69,6 +69,10 @@ task unpack(type: Copy) {
 }
 docker {
     name "${project.group}/${bootJar.baseName}"
-    copySpec.from(tasks.unpack.outputs).into("dependency")
-    buildArgs(['DEPENDENCY': "dependency"])
+    tags "latest"
+    files bootJar.archivePath
+    dockerfile file('Dockerfile')
+    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+    //copySpec.from(tasks.unpack.outputs).into("dependency")
+    //buildArgs(['DEPENDENCY': "dependency"])
 }
