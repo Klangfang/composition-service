@@ -1,5 +1,6 @@
 package com.klangfang.core;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resources;
@@ -11,12 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-
 @RestController
 @RequestMapping("/compositions")
 @ExposesResourceFor(Composition.class)
 public class CompositionController {
+
+    @Autowired
+    private CompositionRepository compositionRepository;
 
     private final EntityLinks entityLinks;
 
@@ -27,7 +29,7 @@ public class CompositionController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     HttpEntity<Resources<Composition>> getAllCompositions() {
 
-        Resources<Composition> resources = new Resources(Arrays.asList(new Composition(), new Composition(), new Composition()));
+        Resources<Composition> resources = new Resources(compositionRepository.findAll());
         resources.add(this.entityLinks.linkToCollectionResource(Composition.class));
         return new ResponseEntity<>(resources, HttpStatus.OK);
     }
