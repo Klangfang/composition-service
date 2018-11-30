@@ -1,5 +1,6 @@
 package com.klangfang.core;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -11,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/compositions")
 @ExposesResourceFor(Composition.class)
@@ -19,49 +23,47 @@ public class CompositionController {
     @Autowired
     private CompositionRepository compositionRepository;
 
-    private final EntityLinks entityLinks;
+    private final String APPLICATION_HAL_JSON = "application/hal+json";
 
-    public CompositionController(EntityLinks entityLinks) {
-        this.entityLinks = entityLinks;
-    }
+    //Z.B compositions?status=created
+    @ApiOperation("Gets a list of composition having the given status")
+    @GetMapping(params = {"status"}, produces = APPLICATION_HAL_JSON)
+    HttpEntity<Resources<CompositionResource>> getCompositionsByStatus(@RequestParam String status) {
 
-    @GetMapping(path = "/compose", produces = MediaType.APPLICATION_JSON_VALUE)
-    HttpEntity<Resources<Composition>> getComposeCompositions() {
-
-        Resources<Composition> resources = new Resources(compositionRepository.findAll());
-        resources.add(this.entityLinks.linkToCollectionResource(Composition.class));
+        List<Composition> compositions = compositionRepository.findByStatus(CompositionStatus.valueOf(status.toUpperCase()));
+        Resources<CompositionResource> resources = new Resources(compositions.stream().map(c -> new CompositionResource(c)).collect(Collectors.toList()));
         return new ResponseEntity<>(resources, HttpStatus.OK);
     }
 
-
-    @GetMapping(path = "/discover", produces = MediaType.APPLICATION_JSON_VALUE)
-    HttpEntity<Resources<Composition>> getDiscoveredCompositions() {
-
-        Resources<Composition> resources = new Resources(compositionRepository.findAll());
-        resources.add(this.entityLinks.linkToCollectionResource(Composition.class));
-        return new ResponseEntity<>(resources, HttpStatus.OK);
-    }
-
-    // Create new composition
-    @PostMapping
-    HttpEntity<Resources<String>> createComposition(@RequestBody Composition composition) {
+    @ApiOperation("Create a new composition")
+    @PostMapping(produces = APPLICATION_HAL_JSON)
+    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestBody Composition composition) {
 
         compositionRepository.save(composition);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    @GetMapping
-    HttpEntity<Resource<Composition>> getComposition(@PathVariable Long id) {
+    @ApiOperation("Gets all informations about a composition")
+    @GetMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
+    HttpEntity<Resource<CompositionFullResource>> getComposition(@PathVariable Long compositionId) {
 
-        return null;
+        Composition composition = compositionRepository.getOne(compositionId);
+        Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    @PutMapping
-    HttpEntity<Resources<String>> updateComposition(@RequestBody Composition composition) {
+    @ApiOperation("Updates the tracks of a composition")
+    @PutMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
+    HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable Long compositionId, @RequestBody List<Track> newTracks) {
 
-        return null;
+        Composition result = compositionRepository.getOne(compositionId);
+        Resource<CompositionFullResource> resource = null;
+        if (result != null) {
+            result.updateTracks(newTracks); // TODO use a merge instead
+            compositionRepository.save(result);//TODO replace with transaction save
+            resource = new Resource<>(new CompositionFullResource(result));
+        }
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
-
-
-
 }

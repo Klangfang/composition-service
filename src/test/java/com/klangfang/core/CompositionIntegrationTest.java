@@ -29,7 +29,7 @@ public class CompositionIntegrationTest {
         assertThat(afterSave.getId()).isPositive();
 
 
-        List<Composition> venomsCompositions = compositionRepository.findAllByCreatorname("Venom");
+        List<Composition> venomsCompositions = compositionRepository.findByCreatorname("Venom");
 
         assertThat(venomsCompositions).hasSize(1);
         Composition venomsComposition = venomsCompositions.get(0);

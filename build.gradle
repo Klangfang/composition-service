@@ -50,6 +50,12 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.cloud:spring-cloud-starter-oauth2')
     implementation('org.springframework.data:spring-data-rest-hal-browser')
+    // this is required in order use the springfox library
+    compile group: 'com.google.guava', name: 'guava', version: '27.0-android'
+    compile "io.springfox:springfox-swagger2:2.9.2"
+    compile "io.springfox:springfox-data-rest:2.9.2"
+    compile "io.springfox:springfox-bean-validators:2.9.2"
+    compile 'io.springfox:springfox-swagger-ui:2.9.2'
     runtimeOnly('com.h2database:h2')
     runtimeOnly('org.postgresql:postgresql')
     testImplementation('org.springframework.boot:spring-boot-starter-test')

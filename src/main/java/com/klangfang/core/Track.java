@@ -29,6 +29,11 @@ public class Track {
         return duration;
     }
 
+    //TODO Die Reihenfolge durch Startposition setzten und so auch in die Liste speichen
+    public void addSounds(List<Sound> newSounds) {
+        sounds.addAll(newSounds);
+    }
+
     public Long getId() {
         return id;
     }

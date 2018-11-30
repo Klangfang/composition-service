@@ -20,7 +20,9 @@ public class Composition {
     @Column(nullable = false)
     private String creatorname;
 
-    private CompositionStatus status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CompositionStatus status = CompositionStatus.CREATED;
 
     public Composition() {}
 
@@ -29,7 +31,30 @@ public class Composition {
         this.tracks = tracks;
     }
 
-    public void addTrack(Track track) {
+    public void pick() {
+        status = CompositionStatus.PICKED;
+    }
+
+    public void block() {
+        status = CompositionStatus.BLOCKED;
+    }
+
+    public void close() {
+        status = CompositionStatus.CLOSED;
+    }
+
+    //TODO replace with a merge function
+    public void updateTracks(List<Track> newTracks) {
+        int trackPosition=0;
+        for (Track newTrack : newTracks) {
+            List<Sound> newSounds = newTrack.getSounds();
+            addNewSounds(trackPosition++, newSounds);
+        }
+    }
+
+    private void addNewSounds(int trackPosition, List<Sound> newSounds) {
+        Track track = tracks.get(trackPosition);
+        track.addSounds(newSounds);
         tracks.add(track);
     }
 
@@ -60,5 +85,9 @@ public class Composition {
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public CompositionStatus getStatus() {
+        return status;
     }
 }
