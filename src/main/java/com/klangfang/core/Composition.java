@@ -20,6 +20,8 @@ public class Composition {
     @Column(nullable = false)
     private String creatorname;
 
+    private CompositionStatus status;
+
     public Composition() {}
 
     public Composition(String creatorname, List<Track> tracks) {
