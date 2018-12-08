@@ -12,13 +12,16 @@ public class Composition {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String creatorname;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Track> tracks;
 
     private LocalDateTime creationDate = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private String creatorname;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -26,7 +29,8 @@ public class Composition {
 
     public Composition() {}
 
-    public Composition(String creatorname, List<Track> tracks) {
+    public Composition(String title, String creatorname, List<Track> tracks) {
+        this.title = title;
         this.creatorname = creatorname;
         this.tracks = tracks;
     }
@@ -89,5 +93,9 @@ public class Composition {
 
     public CompositionStatus getStatus() {
         return status;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

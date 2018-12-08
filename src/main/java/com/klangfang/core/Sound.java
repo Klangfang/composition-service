@@ -13,8 +13,10 @@ public class Sound {
     private Long id;
 
     @Column(nullable = false)
-    @NaturalId
     private String filename;
+
+    @Column(nullable = false)
+    private String title;
 
     @Min(0)
     @Column(nullable = false)
@@ -30,11 +32,12 @@ public class Sound {
     public Sound() {
     }
 
-    public Sound(@Min(0) int startPositionInMs, @Min(0) int durationInMs, String filename, String creatorname) {
+    public Sound(String filename, String title, String creatorname, @Min(0) int startPositionInMs, @Min(0) int durationInMs) {
+        this.filename = filename;
+        this.title = title;
+        this.creatorname = creatorname;
         this.startPositionInMs = startPositionInMs;
         this.durationInMs = durationInMs;
-        this.filename = filename;
-        this.creatorname = creatorname;
     }
 
     public Long getId() {
@@ -55,5 +58,9 @@ public class Sound {
 
     public String getCreatorname() {
         return creatorname;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

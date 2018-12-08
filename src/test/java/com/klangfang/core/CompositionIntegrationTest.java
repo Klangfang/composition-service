@@ -20,9 +20,9 @@ public class CompositionIntegrationTest {
 
     @Test
     public void testPersistenceOfSuccess() {
-        Sound sound = new Sound(0, 10000, "soundxy", "Riot");
+        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0, 10000);
         Track track = new Track(Arrays.asList(sound));
-        Composition composition = new Composition("Venom", Arrays.asList(track));
+        Composition composition = new Composition("CompositionTitle", "Venom", Arrays.asList(track));
         Composition afterSave = compositionRepository.save(composition);
 
         assertThat(afterSave).isNotNull();
