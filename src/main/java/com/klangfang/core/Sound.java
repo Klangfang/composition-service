@@ -1,6 +1,4 @@
-package com.klangfang.core;
-
-import org.hibernate.annotations.NaturalId;
+package com.klangfang.core.storage;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
