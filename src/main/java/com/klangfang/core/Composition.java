@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Composition {
@@ -45,6 +46,12 @@ public class Composition {
 
     public void close() {
         status = CompositionStatus.CLOSED;
+    }
+
+    public List<String> getFilenames() {
+        return tracks.stream().
+                flatMap(t -> t.getFilenames().stream())
+                .collect(Collectors.toList());
     }
 
     //TODO replace with a merge function

@@ -1,4 +1,4 @@
-package com.klangfang.core.storage;
+package com.klangfang.core;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

@@ -3,6 +3,7 @@ package com.klangfang.core;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Track {
@@ -18,6 +19,12 @@ public class Track {
 
     public Track(List<Sound> sounds) {
         this.sounds = sounds;
+    }
+
+    public List<String> getFilenames() {
+        return sounds.stream()
+                .map(s -> s.getFilename())
+                .collect(Collectors.toList());
     }
 
     public int getDurationInMs() {
