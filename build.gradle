@@ -82,3 +82,13 @@ docker {
     //copySpec.from(tasks.unpack.outputs).into("dependency")
     //buildArgs(['DEPENDENCY': "dependency"])
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+    into "$buildDir/lib"
+    from(configurations.compile)
+}
+
+stage.dependsOn(copyToLib)
