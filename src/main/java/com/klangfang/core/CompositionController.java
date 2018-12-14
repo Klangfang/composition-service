@@ -8,10 +8,12 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,10 +45,10 @@ public class CompositionController {
 
     @ApiOperation("Create a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestBody Composition composition,
-                                                                    @RequestParam("files") List<MultipartFile> files) {
+    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
+                                                                    @RequestParam("file") MultipartFile[] file) {
         compositionRepository.save(composition);
-        storageService.store(files);
+        storageService.store(Arrays.asList(file));
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }

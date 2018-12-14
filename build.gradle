@@ -77,7 +77,7 @@ docker {
     name "${project.group}/${bootJar.baseName}"
     tags "latest"
     files bootJar.archivePath
-    dockerfile file('DockerfileTmp')
+    dockerfile file('Dockerfile')
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
     //copySpec.from(tasks.unpack.outputs).into("dependency")
     //buildArgs(['DEPENDENCY': "dependency"])
