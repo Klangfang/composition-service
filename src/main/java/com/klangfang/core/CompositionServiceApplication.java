@@ -2,12 +2,18 @@ package com.klangfang.core;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.klangfang.core.storage.FileStorageProperties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 import springfox.documentation.builders.PathSelectors;
@@ -32,8 +38,15 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
@@ -45,7 +58,19 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableSwagger2
 public class CompositionServiceApplication {
 
+   /* @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> sessionManagerCustomizer() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        return server -> server.addContextCustomizers(context -> context.setSessionTimeout(24 * 60));
+    }*/
+
     public static void main(String[] args) {
+        /*String ENV_PORT = System.getenv().get("PORT");
+        String ENV_DYNO = System.getenv().get("DYNO");
+        if(ENV_PORT != null && ENV_DYNO != null) {
+            System.getProperties().put("server.port", ENV_PORT);
+        }
+*/
         SpringApplication.run(CompositionServiceApplication.class, args);
     }
 
