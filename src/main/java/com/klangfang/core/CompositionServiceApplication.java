@@ -7,15 +7,19 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -57,6 +61,10 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 })
 @EnableSwagger2
 public class CompositionServiceApplication {
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
 
    /* @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> sessionManagerCustomizer() {
@@ -158,4 +166,5 @@ public class CompositionServiceApplication {
                 .validatorUrl(null)
                 .build();
     }
+
 }
