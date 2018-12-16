@@ -94,7 +94,3 @@ task copyToLib(type: Copy) {
 }
 
 stage.dependsOn(copyToLib)
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
-}
