@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/composition-service-0.0.1.jar
+web: java -jar target/compositions-service-1.0.jar
