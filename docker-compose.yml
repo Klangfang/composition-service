@@ -1,0 +1,20 @@
+
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - ./webapp:/opt/webapp
+  db:
+    image: postgres:latest
+    ports:
+      - "5433:5433"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+

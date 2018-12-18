@@ -1,0 +1,1 @@
+curl -i -X POST -H "Content-Type: multipart/mixed" -F "composition=@composition.json; type=application/json" -F "file=@sicko.mp3; type=audio/mpeg" -F "file=@sicko2.mp3; type=audio/mpeg"  http://localhost:8080/compositions
