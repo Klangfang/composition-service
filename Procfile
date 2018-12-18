@@ -1,1 +1,0 @@
-web: java -jar target/compositions-service-1.0.jar
