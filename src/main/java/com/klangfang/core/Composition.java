@@ -105,4 +105,10 @@ public class Composition {
     public String getTitle() {
         return title;
     }
+
+    public void refreshFilenames() {
+        for (Track track : tracks) {
+            track.refreshFilenames();
+        }
+    }
 }

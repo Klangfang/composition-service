@@ -48,4 +48,11 @@ public class Track {
     public List<Sound> getSounds() {
         return sounds;
     }
+
+    public void refreshFilenames() {
+        for (Sound sound : sounds) {
+            sound.refreshFilename();
+        }
+
+    }
 }

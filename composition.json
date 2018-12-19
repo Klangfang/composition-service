@@ -1,22 +1,36 @@
 {
   "creatorname": "talal",
-  "title": "test",
+  "title": "Travis Scott",
   "tracks": [
     {
       "sounds": [
         {
           "creatorname": "talal",
           "durationInMs": 323000,
-          "filename": "sicko.mp3",
+          "filename": "sickomode.mp3",
           "startPositionInMs": 0,
           "title": "test"
         },
         {
           "creatorname": "talal",
           "durationInMs": 323000,
-          "filename": "sicko2.mp3",
+          "filename": "stargazing.mp3",
           "startPositionInMs": 4000000,
-          "title": "test2"
+          "title": "Stargazing"
+        },
+        {
+          "creatorname": "talal",
+          "durationInMs": 323000,
+          "filename": "yosemite.mp3",
+          "startPositionInMs": 8000000,
+          "title": "Yosemite"
+        },
+        {
+          "creatorname": "talal",
+          "durationInMs": 323000,
+          "filename": "zeze.mp3",
+          "startPositionInMs": 16000000,
+          "title": "Zeze"
         }
       ]
     }

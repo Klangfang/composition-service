@@ -61,4 +61,8 @@ public class Sound {
     public String getTitle() {
         return title;
     }
+
+    public void refreshFilename() {
+
+    }
 }

@@ -46,7 +46,7 @@ public class CompositionController {
     @ApiOperation("Create a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
     HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
-                                                                    @RequestParam("file") MultipartFile[] file) {
+                                                                    @RequestParam("file") MultipartFile file) {
         compositionRepository.save(composition);
         storageService.store(Arrays.asList(file));
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
@@ -58,20 +58,23 @@ public class CompositionController {
     HttpEntity<Resource<CompositionFullResource>> getComposition(@PathVariable Long compositionId) {
 
         Composition composition = compositionRepository.getOne(compositionId);
-        List<org.springframework.core.io.Resource> files = storageService.loadManyAsResource(composition.getFilenames());
+        //TODO List<org.springframework.core.io.Resource> files = storageService.loadManyAsResource(composition.getFilenames());
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @ApiOperation("Updates the tracks of a composition")
     @PutMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable Long compositionId, @RequestBody List<Track> newTracks) {
+    HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable("compositionId") Long compositionId/*,
+                                                                          @RequestPart("tracks") List<Track> tracks,
+                                                                          @RequestParam("files") MultipartFile[] files*/) {
 
         Composition result = compositionRepository.getOne(compositionId);
         Resource<CompositionFullResource> resource = null;
         if (result != null) {
-            result.updateTracks(newTracks); // TODO use a merge instead
+            //result.updateTracks(tracks); // TODO use a merge instead
             compositionRepository.save(result);//TODO replace with transaction save
+            //storageService.store(Arrays.asList(files));
             resource = new Resource<>(new CompositionFullResource(result));
         }
         return new ResponseEntity<>(resource, HttpStatus.OK);
