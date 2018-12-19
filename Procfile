@@ -1,1 +1,1 @@
-web: java -jar target/compositions-service-1.0.jar
+web: java -jar target/composition-service-1.0.jar
