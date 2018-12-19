@@ -46,9 +46,9 @@ public class CompositionController {
     @ApiOperation("Create a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
     HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
-                                                                    @RequestParam("file") MultipartFile file) {
+                                                                    @RequestParam("files") MultipartFile[] files) {
         compositionRepository.save(composition);
-        storageService.store(Arrays.asList(file));
+        storageService.store(Arrays.asList(files));
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
