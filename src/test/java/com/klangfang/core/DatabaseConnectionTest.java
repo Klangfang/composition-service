@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "prod")
+@ActiveProfiles(profiles = "h2")
 public class DatabaseConnectionTest {
 
     @Autowired

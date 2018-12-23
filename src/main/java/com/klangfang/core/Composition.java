@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
+//@Table(name = "composition", schema = "compositions")
 public class Composition {
 
     @Id
