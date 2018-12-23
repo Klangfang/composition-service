@@ -31,12 +31,15 @@ public class CompositionFullResource extends ResourceSupport {
     @ApiModelProperty(notes = "Current status", position = 4)
     private CompositionStatus status;
 
+    private final List<String> filenames;
+
     public CompositionFullResource(Composition composition) {
         this.compositionId = composition.getId();
         this.tracks = composition.getTracks();
         this.creationDate = composition.getCreationDate();
         this.creatorname = composition.getCreatorname();
         this.status = composition.getStatus();
+        this.filenames = composition.getFilenames();
 
         Link selfLink = linkTo(methodOn(CompositionController.class).getComposition(compositionId)).withSelfRel();
         add(selfLink);
@@ -60,6 +63,10 @@ public class CompositionFullResource extends ResourceSupport {
 
     public CompositionStatus getStatus() {
         return status;
+    }
+
+    public List<String> getFilenames() {
+        return filenames;
     }
 
     /**

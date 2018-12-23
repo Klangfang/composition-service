@@ -3,8 +3,10 @@ package com.klangfang.core;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
+//@Table(name = "track", schema = "compositions")
 public class Track {
 
     @Id
@@ -18,6 +20,12 @@ public class Track {
 
     public Track(List<Sound> sounds) {
         this.sounds = sounds;
+    }
+
+    public List<String> getFilenames() {
+        return sounds.stream()
+                .map(s -> s.getFilename())
+                .collect(Collectors.toList());
     }
 
     public int getDurationInMs() {
@@ -40,5 +48,12 @@ public class Track {
 
     public List<Sound> getSounds() {
         return sounds;
+    }
+
+    public void refreshFilenames() {
+        for (Sound sound : sounds) {
+            sound.refreshFilename();
+        }
+
     }
 }

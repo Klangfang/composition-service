@@ -1,11 +1,10 @@
 package com.klangfang.core;
 
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
 @Entity
+//@Table(name = "sound    ", schema = "compositions")
 public class Sound {
 
     @Id
@@ -62,5 +61,9 @@ public class Sound {
 
     public String getTitle() {
         return title;
+    }
+
+    public void refreshFilename() {
+
     }
 }

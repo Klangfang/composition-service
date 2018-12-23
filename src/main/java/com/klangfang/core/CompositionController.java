@@ -1,8 +1,8 @@
 package com.klangfang.core;
 
+import com.klangfang.core.storage.StorageService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +22,14 @@ import java.util.stream.Collectors;
 @ExposesResourceFor(Composition.class)
 public class CompositionController {
 
+    private final CompositionRepository compositionRepository;
+    private final StorageService storageService;
+
     @Autowired
-    private CompositionRepository compositionRepository;
+    public CompositionController(CompositionRepository compositionRepository, StorageService storageService) {
+        this.compositionRepository = compositionRepository;
+        this.storageService = storageService;
+    }
 
     private final String APPLICATION_HAL_JSON = "application/hal+json";
 
@@ -37,9 +45,10 @@ public class CompositionController {
 
     @ApiOperation("Create a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestBody Composition composition) {
-
+    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
+                                                                    @RequestParam("files") MultipartFile[] files) {
         compositionRepository.save(composition);
+        storageService.store(Arrays.asList(files));
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -49,19 +58,23 @@ public class CompositionController {
     HttpEntity<Resource<CompositionFullResource>> getComposition(@PathVariable Long compositionId) {
 
         Composition composition = compositionRepository.getOne(compositionId);
+        //TODO List<org.springframework.core.io.Resource> files = storageService.loadManyAsResource(composition.getFilenames());
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @ApiOperation("Updates the tracks of a composition")
     @PutMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable Long compositionId, @RequestBody List<Track> newTracks) {
+    HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable("compositionId") Long compositionId/*,
+                                                                          @RequestPart("tracks") List<Track> tracks,
+                                                                          @RequestParam("files") MultipartFile[] files*/) {
 
         Composition result = compositionRepository.getOne(compositionId);
         Resource<CompositionFullResource> resource = null;
         if (result != null) {
-            result.updateTracks(newTracks); // TODO use a merge instead
+            //result.updateTracks(tracks); // TODO use a merge instead
             compositionRepository.save(result);//TODO replace with transaction save
+            //storageService.store(Arrays.asList(files));
             resource = new Resource<>(new CompositionFullResource(result));
         }
         return new ResponseEntity<>(resource, HttpStatus.OK);

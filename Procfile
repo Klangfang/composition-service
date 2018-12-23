@@ -1,0 +1,1 @@
+web: java -jar target/composition-service-1.0.jar --spring.profiles.active=prod
