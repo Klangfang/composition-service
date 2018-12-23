@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
+//@Table(name = "track", schema = "compositions")
 public class Track {
 
     @Id
