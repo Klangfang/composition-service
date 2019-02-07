@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,8 +39,7 @@ public class CompositionController {
 
     @ApiOperation("Create a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
-                                                                    @RequestParam("files") MultipartFile[] files) {
+    HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestBody Composition composition) {
         compositionRepository.save(composition);
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
@@ -60,15 +58,13 @@ public class CompositionController {
     @ApiOperation("Updates the tracks of a composition")
     @PutMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
     HttpEntity<Resource<CompositionFullResource>> updateCompositionTracks(@PathVariable("compositionId") Long compositionId/*,
-                                                                          @RequestPart("tracks") List<Track> tracks,
-                                                                          @RequestParam("files") MultipartFile[] files*/) {
+                                                                          @RequestPart("tracks") List<Track> tracks,*/) {
 
         Composition result = compositionRepository.getOne(compositionId);
         Resource<CompositionFullResource> resource = null;
         if (result != null) {
             //result.updateTracks(tracks); // TODO use a merge instead
             compositionRepository.save(result);//TODO replace with transaction save
-            //storageService.store(Arrays.asList(files));
             resource = new Resource<>(new CompositionFullResource(result));
         }
         return new ResponseEntity<>(resource, HttpStatus.OK);
