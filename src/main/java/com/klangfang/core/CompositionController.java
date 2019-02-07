@@ -8,6 +8,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class CompositionController {
     //Z.B compositions?status=created
     @ApiOperation("Gets a list of composition having the given status")
     @GetMapping(params = {"status"}, produces = APPLICATION_HAL_JSON)
+    @Transactional
     HttpEntity<Resources<CompositionResource>> getCompositionsByStatus(@RequestParam String status) {
 
         List<Composition> compositions = compositionRepository.findByStatus(CompositionStatus.valueOf(status.toUpperCase()));
