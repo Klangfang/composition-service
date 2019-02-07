@@ -38,11 +38,11 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @SpringBootApplication
 @EnableSwagger2
-public class CompositionServiceApplication {
+public class Application {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(CompositionServiceApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
