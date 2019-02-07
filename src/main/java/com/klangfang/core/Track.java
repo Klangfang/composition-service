@@ -28,6 +28,13 @@ public class Track {
                 .collect(Collectors.toList());
     }
 
+    public List<byte[]> getFiles() {
+        return sounds.stream()
+                .map(s -> s.getData())
+                .collect(Collectors.toList());
+    }
+
+
     public int getDurationInMs() {
         int duration = sounds.stream()
                 .filter(Objects::nonNull)

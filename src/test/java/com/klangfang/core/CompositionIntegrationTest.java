@@ -22,7 +22,9 @@ public class CompositionIntegrationTest {
 
     @Test
     public void testPersistenceOfSuccess() {
-        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0, 10000);
+        byte[] data = new byte[]{0,0,0,1};
+        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0,
+                10000, data);
         Track track = new Track(Arrays.asList(sound));
         Composition composition = new Composition("CompositionTitle", "Venom", Arrays.asList(track));
         Composition afterSave = compositionRepository.save(composition);
@@ -37,5 +39,7 @@ public class CompositionIntegrationTest {
         Composition venomsComposition = venomsCompositions.get(0);
         assertThat(venomsComposition.getTracks()).hasSize(1);
         assertThat(venomsComposition.getTracks().get(0).getSounds()).hasSize(1);
+        assertThat(venomsComposition.getFiles()).isNotEmpty();
+        assertThat(venomsComposition.getFiles()).contains(data);
     }
 }
