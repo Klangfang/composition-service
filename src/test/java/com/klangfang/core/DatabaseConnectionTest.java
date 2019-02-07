@@ -21,7 +21,8 @@ public class DatabaseConnectionTest {
 
     @Test
     public void testConnectionOfSuccess() {
-        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0, 10000);
+        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0,
+                10000, new byte[]{});
         Track track = new Track(Arrays.asList(sound));
         Composition composition = new Composition("Composition in production", "Venom", Arrays.asList(track));
         Composition afterSave = compositionRepository.save(composition);

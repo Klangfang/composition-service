@@ -55,6 +55,12 @@ public class Composition {
                 .collect(Collectors.toList());
     }
 
+    public List<byte[]> getFiles() {
+        return tracks.stream().
+                flatMap(t -> t.getFiles().stream())
+                .collect(Collectors.toList());
+    }
+
     //TODO replace with a merge function
     public void updateTracks(List<Track> newTracks) {
         int trackPosition=0;

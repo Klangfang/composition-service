@@ -1,6 +1,5 @@
 package com.klangfang.core;
 
-import com.klangfang.core.storage.StorageService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -8,12 +7,10 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +20,10 @@ import java.util.stream.Collectors;
 public class CompositionController {
 
     private final CompositionRepository compositionRepository;
-    private final StorageService storageService;
 
     @Autowired
-    public CompositionController(CompositionRepository compositionRepository, StorageService storageService) {
+    public CompositionController(CompositionRepository compositionRepository) {
         this.compositionRepository = compositionRepository;
-        this.storageService = storageService;
     }
 
     private final String APPLICATION_HAL_JSON = "application/hal+json";
@@ -48,7 +43,6 @@ public class CompositionController {
     HttpEntity<Resource<CompositionFullResource>> createComposition(@RequestPart("composition") Composition composition,
                                                                     @RequestParam("files") MultipartFile[] files) {
         compositionRepository.save(composition);
-        storageService.store(Arrays.asList(files));
         Resource<CompositionFullResource> resource = new Resource(new CompositionFullResource(composition));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }

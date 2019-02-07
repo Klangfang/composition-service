@@ -1,4 +1,4 @@
-insert into sound(id, filename, title, creatorname, start_position_in_ms, duration_in_ms, ) values (10, 'xy.3gp', 'FirstSound', 'Venom', 0, 10000)
+insert into sound(id, filename, title, creatorname, start_position_in_ms, duration_in_ms) values (10, 'xy.3gp', 'FirstSound', 'Venom', 0, 10000)
 
 insert into track(id) values (10)
 
