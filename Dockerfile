@@ -5,6 +5,4 @@ ARG DEPENDENCY=target/dependency
 COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY ${DEPENDENCY}/META-INF /app/META-INF
 COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=prod","-jar","composition-service-1.0.jar"]
-#CMD ["java","-Djava.security.egd=file:/dev/./urandom",
-   # "-Dspring.profiles.active=prod","-jar","composition-service-1.0.jar"]
+CMD ["java","-Dspring.profiles.active=prod","-jar","composition-service-1.0.jar"]
