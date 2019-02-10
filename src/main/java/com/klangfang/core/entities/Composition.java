@@ -1,7 +1,7 @@
 package com.klangfang.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.klangfang.core.CompositionStatus;
+import com.klangfang.core.Status;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,7 +31,7 @@ public class Composition implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CompositionStatus status = CompositionStatus.CREATED;
+    private Status status = Status.CREATED;
 
     public Composition() {}
 
@@ -42,15 +42,15 @@ public class Composition implements Serializable {
     }
 
     public void pick() {
-        status = CompositionStatus.PICKED;
+        status = Status.PICKED;
     }
 
     public void block() {
-        status = CompositionStatus.BLOCKED;
+        status = Status.BLOCKED;
     }
 
     public void close() {
-        status = CompositionStatus.CLOSED;
+        status = Status.CLOSED;
     }
 
     @JsonIgnore
@@ -111,7 +111,7 @@ public class Composition implements Serializable {
         return creationDate;
     }
 
-    public CompositionStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
