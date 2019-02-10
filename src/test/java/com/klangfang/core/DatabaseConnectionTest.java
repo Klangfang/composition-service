@@ -1,5 +1,8 @@
 package com.klangfang.core;
 
+import com.klangfang.core.entities.Composition;
+import com.klangfang.core.entities.Sound;
+import com.klangfang.core.entities.Track;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

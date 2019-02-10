@@ -1,11 +1,12 @@
-package com.klangfang.core;
+package com.klangfang.core.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 @Entity
 //@Table(name = "sound    ", schema = "compositions")
-public class Sound {
+public class Sound implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

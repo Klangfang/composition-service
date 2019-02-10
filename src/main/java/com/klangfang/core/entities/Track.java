@@ -1,13 +1,16 @@
-package com.klangfang.core;
+package com.klangfang.core.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
 //@Table(name = "track", schema = "compositions")
-public class Track {
+public class Track implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,12 +25,14 @@ public class Track {
         this.sounds = sounds;
     }
 
+    @JsonIgnore
     public List<String> getFilenames() {
         return sounds.stream()
                 .map(s -> s.getFilename())
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<byte[]> getFiles() {
         return sounds.stream()
                 .map(s -> s.getData())

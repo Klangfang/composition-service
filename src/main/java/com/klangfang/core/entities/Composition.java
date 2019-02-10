@@ -1,6 +1,10 @@
-package com.klangfang.core;
+package com.klangfang.core.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.klangfang.core.CompositionStatus;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -8,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Entity
 //@Table(name = "composition", schema = "compositions")
-public class Composition {
+public class Composition implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,12 +53,14 @@ public class Composition {
         status = CompositionStatus.CLOSED;
     }
 
+    @JsonIgnore
     public List<String> getFilenames() {
         return tracks.stream().
                 flatMap(t -> t.getFilenames().stream())
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<byte[]> getFiles() {
         return tracks.stream().
                 flatMap(t -> t.getFiles().stream())
