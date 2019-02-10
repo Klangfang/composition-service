@@ -1,5 +1,5 @@
 package com.klangfang.core;
 
-public enum  CompositionStatus {
+public enum Status {
     CREATED, PICKED, BLOCKED, CLOSED
 }

@@ -40,7 +40,7 @@ public class CompositionController {
     HttpEntity<Resources<Composition>> getCompositionsByStatus(@RequestParam String status) {
 
         List<Composition> compositions = compositionRepository.findByStatus(
-                CompositionStatus.valueOf(status.toUpperCase()));
+                Status.valueOf(status.toUpperCase()));
         Resources<Composition> resources = new Resources<>(compositions);
         resources.add(this.entityLinks.linkToCollectionResource(Composition.class));
 
