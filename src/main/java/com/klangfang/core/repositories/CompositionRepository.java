@@ -1,9 +1,12 @@
-package com.klangfang.core;
+package com.klangfang.core.repositories;
 
+import com.klangfang.core.Status;
 import com.klangfang.core.entities.Composition;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompositionRepository extends JpaRepository<Composition, Long> {
 
@@ -19,5 +22,12 @@ public interface CompositionRepository extends JpaRepository<Composition, Long> 
      * @param status
      * @return list of composition having the given status
      */
-    List<Composition> findByStatus(Status status);
+    List<Composition> findByStatus(Status status, Pageable pageable);
+
+    /**
+     *
+     * @param title
+     * @return
+     */
+    Optional<Composition> findByTitle(String title);
 }

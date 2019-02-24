@@ -2,12 +2,14 @@ package com.klangfang.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.klangfang.core.Status;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -31,7 +33,9 @@ public class Composition implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status = Status.CREATED;
+    private Status status = Status.RELEASED;
+
+    private Integer numberOfParticipants;
 
     public Composition() {}
 
@@ -40,6 +44,8 @@ public class Composition implements Serializable {
         this.creatorname = creatorname;
         this.tracks = tracks;
     }
+
+    public void release() { status = Status.RELEASED; }
 
     public void pick() {
         status = Status.PICKED;
@@ -60,26 +66,21 @@ public class Composition implements Serializable {
                 .collect(Collectors.toList());
     }
 
-    @JsonIgnore
-    public List<byte[]> getFiles() {
-        return tracks.stream().
-                flatMap(t -> t.getFiles().stream())
-                .collect(Collectors.toList());
-    }
-
-    //TODO replace with a merge function
-    public void updateTracks(List<Track> newTracks) {
+    public void updateTracksAndRelease(List<Track> newTracks) {
+        release();
         int trackPosition=0;
         for (Track newTrack : newTracks) {
-            List<Sound> newSounds = newTrack.getSounds();
-            addNewSounds(trackPosition++, newSounds);
+            addNewSounds(trackPosition++, newTrack.getSounds());
         }
     }
 
     private void addNewSounds(int trackPosition, List<Sound> newSounds) {
         Track track = tracks.get(trackPosition);
         track.addSounds(newSounds);
-        tracks.add(track);
+    }
+
+    public String getSnippet() {
+        return tracks.get(0).getSounds().get(0).getFilename(); //TODO
     }
 
     public int getDurationInMs() {
@@ -117,6 +118,10 @@ public class Composition implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public Integer getNumberOfParticipants() {
+        return numberOfParticipants;
     }
 
     public void refreshFilenames() {

@@ -1,5 +1,9 @@
 package com.klangfang.core;
 
 public enum Status {
-    CREATED, PICKED, BLOCKED, CLOSED
+
+    RELEASED,
+    PICKED,
+    BLOCKED,
+    CLOSED //TODO WHEN? CLIENT OR SERVER?
 }
