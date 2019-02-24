@@ -3,6 +3,7 @@ package com.klangfang.core;
 import com.klangfang.core.entities.Composition;
 import com.klangfang.core.entities.Sound;
 import com.klangfang.core.entities.Track;
+import com.klangfang.core.repositories.CompositionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class DatabaseConnectionTest {
     @Test
     public void testConnectionOfSuccess() {
         Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0,
-                10000, new byte[]{});
+                10000);
         Track track = new Track(Arrays.asList(sound));
         Composition composition = new Composition("Composition in production", "Venom", Arrays.asList(track));
         Composition afterSave = compositionRepository.save(composition);

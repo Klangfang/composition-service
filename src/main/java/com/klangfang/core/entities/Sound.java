@@ -1,5 +1,7 @@
 package com.klangfang.core.entities;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
@@ -12,18 +14,15 @@ public class Sound implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NaturalId
     @Column(nullable = false)
     private String filename;
 
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private String title;
 
-    @Lob
-    //@Column(nullable = false)
-    private byte[] data;
-
     @Min(0)
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private int startPositionInMs;
 
     @Min(0)
@@ -37,13 +36,12 @@ public class Sound implements Serializable {
     }
 
     public Sound(String filename, String title, String creatorname, @Min(0) int startPositionInMs,
-                 @Min(0) int durationInMs, byte[] data) {
+                 @Min(0) int durationInMs) {
         this.filename = filename;
         this.title = title;
         this.creatorname = creatorname;
         this.startPositionInMs = startPositionInMs;
         this.durationInMs = durationInMs;
-        this.data = data;
     }
 
     public Long getId() {
@@ -68,10 +66,6 @@ public class Sound implements Serializable {
 
     public String getTitle() {
         return title;
-    }
-
-    public byte[] getData() {
-        return data;
     }
 
     public void refreshFilename() {

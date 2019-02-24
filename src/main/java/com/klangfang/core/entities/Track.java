@@ -32,14 +32,6 @@ public class Track implements Serializable {
                 .collect(Collectors.toList());
     }
 
-    @JsonIgnore
-    public List<byte[]> getFiles() {
-        return sounds.stream()
-                .map(s -> s.getData())
-                .collect(Collectors.toList());
-    }
-
-
     public int getDurationInMs() {
         int duration = sounds.stream()
                 .filter(Objects::nonNull)

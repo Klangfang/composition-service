@@ -1,83 +1,107 @@
 package com.klangfang.core;
 
 import com.klangfang.core.entities.Composition;
+import com.klangfang.core.entities.Track;
+import com.klangfang.core.repositories.CompositionRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.*;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+@Api(description = "Set of endpoints for managing composition data.")
 @RestController
 @RequestMapping("/compositions")
-@ExposesResourceFor(Composition.class)
-public class CompositionController {
+class CompositionController {
 
     private final CompositionRepository compositionRepository;
-
-    private final EntityLinks entityLinks;
+    private final CompositionResourceAssembler assembler;
 
     @Autowired
-    public CompositionController(CompositionRepository compositionRepository, EntityLinks entityLinks) {
+    public CompositionController(CompositionRepository compositionRepository,
+                                 CompositionResourceAssembler assembler) {
         this.compositionRepository = compositionRepository;
-        this.entityLinks = entityLinks;
+        this.assembler = assembler;
     }
 
-    private final String APPLICATION_HAL_JSON = "application/hal+json";
+    @ApiOperation("Gets a list of composition overviews")
+    @GetMapping(path = "/compositionsOverview", params = {"page", "size"})
+    Resources<Resource<CompositionOverviewDto>> compositionsOverview(@RequestParam Integer page,
+                                                                  @RequestParam Integer size) {
 
-    @ApiOperation("Gets a list of composition having the given status")
-    @GetMapping(params = {"status"}, produces = APPLICATION_HAL_JSON)
-    @Transactional
-    HttpEntity<Resources<Composition>> getCompositionsByStatus(@RequestParam String status) {
+        List<Resource<CompositionOverviewDto>> compositions = compositionRepository.findByStatus(
+                Status.valueOf(Status.RELEASED.name()),
+                PageRequest.of(page, size))
+                .stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
 
-        List<Composition> compositions = compositionRepository.findByStatus(
-                Status.valueOf(status.toUpperCase()));
-        Resources<Composition> resources = new Resources<>(compositions);
-        resources.add(this.entityLinks.linkToCollectionResource(Composition.class));
-
-        return new ResponseEntity<>(resources, HttpStatus.OK);
+       return new Resources<>(compositions,
+               linkTo(methodOn(CompositionController.class).compositionsOverview(++page, size)).withSelfRel());
     }
 
-    @ApiOperation("Create a new composition")
-    @PostMapping(produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<Composition>> createComposition(@RequestBody Composition composition) {
-        compositionRepository.save(composition);
-        Resource<Composition> resource = new Resource(composition);
-        resource.add(this.entityLinks.linkToSingleResource(Composition.class, composition.getId()));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
-    }
+    @ApiOperation("Creates a new composition")
+    @PostMapping
+    ResponseEntity<Resource<CompositionOverviewDto>> newComposition(@RequestPart("composition") Composition composition,
+                                                                    @RequestParam("files") MultipartFile[] files) {
 
-    @ApiOperation("Gets all informations about a composition")
-    @GetMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<Composition>> getComposition(@PathVariable Long compositionId) {
-
-        Composition composition = compositionRepository.getOne(compositionId);
-        Resource<Composition> resource = new Resource(composition);
-        resource.add(this.entityLinks.linkToSingleResource(Composition.class, compositionId));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
-    }
-
-    @ApiOperation("Updates the tracks of a composition")
-    @PutMapping(path = "/{compositionId}", produces = APPLICATION_HAL_JSON)
-    HttpEntity<Resource<Composition>> updateCompositionTracks(@PathVariable("compositionId") Long compositionId/*,
-                                                                          @RequestPart("tracks") List<Track> tracks,*/) {
-
-        Composition result = compositionRepository.getOne(compositionId);
-        Resource<Composition> resource = null;
-        if (result != null) {
-            //result.updateTracks(tracks); // TODO use a merge instead
-            compositionRepository.save(result);//TODO replace with transaction save
-            resource = new Resource(result);
+        for (MultipartFile file : files) {
+            //TODO save to file
         }
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+
+        composition.release();
+        compositionRepository.save(composition);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(CompositionController.class).pick(composition.getId())).toUri())
+                .body(assembler.toResource(composition));
+    }
+
+    @ApiOperation("Picks a composition and returns all information about it")
+    @PutMapping(path = "/{id}/pick")
+    ResponseEntity<Resource<Composition>> pick(@PathVariable Long id) {
+
+        Composition composition = compositionRepository.findById(id)
+                .orElseThrow(() -> new CompositionNotFoundException(id));
+
+        if (composition.getStatus() == Status.RELEASED) {
+            composition.pick();
+            return ResponseEntity.ok(assembler.toFullResource(compositionRepository.save(composition)));
+        }
+
+        throw new MethodNotAllowedException("pick", composition.getStatus().name());
+    }
+
+    @ApiOperation("Released the composition and updates its tracks")
+    @PutMapping(path = "/{id}/release")
+    ResponseEntity<Resource<CompositionOverviewDto>> release(@PathVariable Long id,
+                                        @RequestPart("tracks") List<Track> newTracks,
+                                        @RequestParam("files") MultipartFile[] files) {
+
+        Composition composition = compositionRepository.findById(id)
+                .orElseThrow(() -> new CompositionNotFoundException(id));
+
+        if (composition.getStatus() == Status.PICKED) {
+            composition.updateTracksAndRelease(newTracks);
+            for (MultipartFile file : files) {
+                //TODO save to file
+            }
+            return ResponseEntity.ok(assembler.toResource(compositionRepository.save(composition)));
+        }
+
+        throw new MethodNotAllowedException("release", composition.getStatus().name());
+
     }
 }
