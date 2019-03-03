@@ -10,9 +10,11 @@ import java.util.stream.Stream;
 public interface StorageService {
 
 
-    List<String> store(List<MultipartFile> files);
+    List<String> store(Long compositionId, List<MultipartFile> files);
 
-    Stream<Path> loadMany(List<String> filenames);
+    Resource loadFileAsResource(Long compositionId, String filename);
 
-    List<Resource> loadManyAsResource(List<String> filenames);
+    Stream<Path> loadMany(Long compositionId, List<String> filenames);
+
+    List<Resource> loadManyAsResource(Long compositionId, List<String> filenames);
 }
