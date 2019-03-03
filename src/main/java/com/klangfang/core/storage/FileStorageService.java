@@ -27,17 +27,22 @@ public class FileStorageService implements StorageService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
 
+        createDirectories(fileStorageLocation);
+    }
+
+    private void createDirectories(Path path) {
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            Files.createDirectories(path);
         } catch (Exception ex) {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
 
     @Override
-    public List<String> store(List<MultipartFile> files) {
+    public List<String> store(Long compositionId, List<MultipartFile> files) {
         List<String> filenames = new ArrayList<>();
 
+         createDirectories(Paths.get(fileStorageLocation+"/"+compositionId));
         for (MultipartFile file : files) {
             // Normalize file name
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -49,7 +54,7 @@ public class FileStorageService implements StorageService {
                 }
 
                 // Copy file to the target location (Replacing existing file with the same name)
-                Path targetLocation = this.fileStorageLocation.resolve(filename);
+                Path targetLocation = this.fileStorageLocation.resolve(compositionId+"/"+filename);
                 Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
                 filenames.add(filename);
             } catch (IOException ex) {
@@ -61,21 +66,37 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public Stream<Path> loadMany(List<String> filenames) {
+    public Resource loadFileAsResource(Long compositionId, String filename) {
+        Resource resource;
+        try {
+            Path filePath = this.fileStorageLocation.resolve(compositionId+"/"+filename).normalize();
+            resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new MyFileNotFoundException("File not found " +filename);
+            }
+        } catch (MalformedURLException ex) {
+            throw new MyFileNotFoundException("File not found " + filename, ex);
+        }
+    }
+
+    @Override
+    public Stream<Path> loadMany(Long compositionId, List<String> filenames) {
         return null;
     }
 
     @Override
-    public List<Resource> loadManyAsResource(List<String> filenames) {
+    public List<Resource> loadManyAsResource(Long compositionId, List<String> filenames) {
         List<Resource> files = new ArrayList<>();
         for (String filename : filenames) {
             try {
-                Path filePath = this.fileStorageLocation.resolve(filename).normalize();
+                Path filePath = this.fileStorageLocation.resolve(compositionId+"/"+filename).normalize();
                 Resource resource = new UrlResource(filePath.toUri());
                 if(resource.exists()) {
                     files.add(resource);
                 } else {
-                    throw new MyFileNotFoundException("File not found " + filename);
+                    throw new MyFileNotFoundException("File not found " +filename);
                 }
             } catch (MalformedURLException ex) {
                 throw new MyFileNotFoundException("File not found " + filename, ex);

@@ -35,7 +35,7 @@ public class Composition implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status = Status.RELEASED;
 
-    private Integer numberOfParticipants;
+    private Integer numberOfParticipants = 1;
 
     public Composition() {}
 
@@ -49,6 +49,7 @@ public class Composition implements Serializable {
 
     public void pick() {
         status = Status.PICKED;
+        numberOfParticipants++;
     }
 
     public void block() {

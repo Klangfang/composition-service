@@ -1,5 +1,7 @@
 package com.klangfang.core;
 
+import java.util.List;
+
 public class CompositionOverviewDto {
 
     private String title;
