@@ -9,17 +9,17 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
-public class CompositionResourceAssembler implements ResourceAssembler<Composition, Resource<CompositionOverviewDto>> {
+public class CompositionResourceAssembler implements ResourceAssembler<Composition, Resource<CompositionOverview>> {
 
 
     @Override
-    public Resource<CompositionOverviewDto> toResource(Composition composition) {
+    public Resource<CompositionOverview> toResource(Composition composition) {
 
-        Resource<CompositionOverviewDto> compositionResource = new Resource<>(
-                new CompositionOverviewDto(composition.getTitle(), composition.getNumberOfParticipants(),
+        Resource<CompositionOverview> compositionResource = new Resource<>(
+                new CompositionOverview(composition.getTitle(), composition.getNumberOfMembers(),
                         FilePathUtils.generateSoundFilePath("uri", composition.getId(), composition.getSnippet())));
 
-        if (composition.getStatus() == Status.RELEASED) {
+        if (composition.getStatus() == Status.AVAILABLE) {
             compositionResource.add(
                     linkTo(methodOn(CompositionController.class)
                             .pick(composition.getId())).withRel("pick"));
