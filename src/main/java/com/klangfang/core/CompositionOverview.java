@@ -4,12 +4,12 @@ public class CompositionOverview {
 
     private String title;
     private Integer numberOfMembers;
-    private String snippet;
+    private String snippetPath;
 
-    public CompositionOverview(String title, Integer numberOfMembers, String snippet) {
+    public CompositionOverview(String title, Integer numberOfMembers, String snippetPath) {
         this.title = title;
         this.numberOfMembers = numberOfMembers;
-        this.snippet = snippet;
+        this.snippetPath = snippetPath;
     }
 
     public String getTitle() {
@@ -20,7 +20,7 @@ public class CompositionOverview {
         return numberOfMembers;
     }
 
-    public String getSnippet() {
-        return snippet;
+    public String getSnippetPath() {
+        return snippetPath;
     }
 }
