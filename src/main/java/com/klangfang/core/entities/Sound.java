@@ -21,7 +21,7 @@ public class Sound {
     private Integer trackNumber;
 
     @Column(nullable = false)
-    private String filename;
+    private String filePath;
 
     @Column(nullable = false)
     private String title;
@@ -40,9 +40,9 @@ public class Sound {
     public Sound() {
     }
 
-    public Sound(String filename, String title, String creatorName, @Min(0) Integer startPosition,
+    public Sound(String filePath, String title, String creatorName, @Min(0) Integer startPosition,
                  @Min(0) int duration, Integer trackNumber) {
-        this.filename = filename;
+        this.filePath = filePath;
         this.title = title;
         this.creatorName = creatorName;
         this.startPosition = startPosition;
@@ -54,8 +54,8 @@ public class Sound {
         return id;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getFilePath() {
+        return filePath;
     }
 
     public Integer getStartPosition() {

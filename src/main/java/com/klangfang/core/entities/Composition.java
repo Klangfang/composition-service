@@ -2,7 +2,6 @@ package com.klangfang.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.klangfang.core.Status;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -72,7 +71,7 @@ public class Composition {
     @JsonIgnore
     public List<String> getFilenames() {
         return sounds.stream()
-                .map(s -> s.getFilename())
+                .map(s -> s.getFilePath())
                 .collect(Collectors.toList());
     }
 
@@ -83,7 +82,7 @@ public class Composition {
     }
 
     public String getSnippet() {
-        return sounds.get(0).getFilename(); //TODO
+        return sounds.get(0).getFilePath(); //TODO
     }
 
     public int getDuration() {
