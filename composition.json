@@ -3,32 +3,32 @@
   "creatorName": "talal",
    "sounds": [
         {
-          "trackNumber": 1,
-          "filename": "sound_1.ogg",
+          "trackNumber": 0,
+          "filePath": "sound_1.ogg",
           "title": "Sound 1",
           "startPosition": 0,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
-          "trackNumber": 2,
-          "filename": "sound_2.ogg",
+          "trackNumber": 1,
+          "filePath": "sound_2.ogg",
           "title": "Sound 2",
           "startPosition": 4000,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
-          "trackNumber": 3,
-          "filename": "sound_3.ogg",
+          "trackNumber": 2,
+          "filePath": "sound_3.ogg",
           "title": "Sound 3",
           "startPosition": 8000,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
-          "trackNumber": 4,
-          "filename": "sound_4.ogg",
+          "trackNumber": 3,
+          "filePath": "sound_4.ogg",
           "title": "Sound 4",
           "startPosition": 12000,
           "duration": 2000,
