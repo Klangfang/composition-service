@@ -1,50 +1,38 @@
 {
-  "creatorname": "talal",
-  "title": "Travis Scott",
-  "tracks": [
-    {
-      "sounds": [
+  "title": "Klangfang",
+  "creatorName": "talal",
+   "sounds": [
         {
-          "creatorname": "talal",
-          "durationInMs": 2000,
+          "trackNumber": 1,
           "filename": "sound_1.ogg",
-          "startPositionInMs": 0,
-          "title": "Sound 1"
-        }
-      ]
-    },
-    {
-      "sounds": [
+          "title": "Sound 1",
+          "startPosition": 0,
+          "duration": 2000,
+          "creatorName": "talal"
+        },
         {
-          "creatorname": "talal",
-          "durationInMs": 2000,
+          "trackNumber": 2,
           "filename": "sound_2.ogg",
-          "startPositionInMs": 4000,
-          "title": "Sound 2"
-        }
-      ]
-    },
-    {
-      "sounds": [
+          "title": "Sound 2",
+          "startPosition": 4000,
+          "duration": 2000,
+          "creatorName": "talal"
+        },
         {
-          "creatorname": "talal",
-          "durationInMs": 2000,
+          "trackNumber": 3,
           "filename": "sound_3.ogg",
-          "startPositionInMs": 6000,
-          "title": "Sound 3"
-        }
-      ]
-    },
-    {
-      "sounds": [
+          "title": "Sound 3",
+          "startPosition": 8000,
+          "duration": 2000,
+          "creatorName": "talal"
+        },
         {
-          "creatorname": "talal",
-          "durationInMs": 2000,
+          "trackNumber": 4,
           "filename": "sound_4.ogg",
-          "startPositionInMs": 8000,
-          "title": "Sound 4"
+          "title": "Sound 4",
+          "startPosition": 12000,
+          "duration": 2000,
+          "creatorName": "talal"
         }
-      ]
-    }
-  ]
+   ]
 }

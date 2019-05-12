@@ -2,7 +2,6 @@ package com.klangfang.core;
 
 import com.klangfang.core.entities.Composition;
 import com.klangfang.core.entities.Sound;
-import com.klangfang.core.entities.Track;
 import com.klangfang.core.repositories.CompositionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,9 +25,8 @@ public class DatabaseConnectionTest {
     @Test
     public void testConnectionOfSuccess() {
         Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0,
-                10000);
-        Track track = new Track(Arrays.asList(sound));
-        Composition composition = new Composition("Composition in production", "Venom", Arrays.asList(track));
+                10000, 1);
+        Composition composition = new Composition("Composition in production", "Venom", List.of(sound));
         Composition afterSave = compositionRepository.save(composition);
 
         assertThat(afterSave).isNotNull();

@@ -12,10 +12,10 @@ public interface CompositionRepository extends JpaRepository<Composition, Long> 
 
     /**
      * Finds all compositions of a certain creator
-     * @param creatorname must be not null
+     * @param creatorName must be not null
      * @return a list a created compositions
      */
-    List<Composition> findByCreatorname(String creatorname);
+    List<Composition> findByCreatorName(String creatorName);
 
     /**
      * Find all compositions by a certain status

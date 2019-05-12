@@ -5,51 +5,60 @@ import com.klangfang.core.Status;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Track vs. No Track
+ * Je mehr compositions und je mehr sounds desto mehr tracknr. (immer Track-Beziehungen weniger)
+ * Je mehr compositions desto mehr tracks Beziehungen (Unanbhängig von der Soundanzahl, immer fest 4 tracks)
+ */
 @Entity
-//@Table(name = "composition", schema = "compositions")
-public class Composition implements Serializable {
+public class Composition {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-        @Column(nullable = false)
-        private String title;
+    //TODO @NaturalId
+    @Column(nullable = false)
+    private String title;
 
-        @Column(nullable = false)
-        private String creatorname;
+    @Column(nullable = false)
+    private String creatorName;
 
-        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-        private List<Track> tracks;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Sound> sounds;
 
-        private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime creationDate = LocalDateTime.now();
 
-        @Column(nullable = false)
-        @Enumerated(EnumType.STRING)
-        private Status status = Status.RELEASED;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.AVAILABLE;
 
-        private Integer numberOfParticipants = 1;
+    private Integer numberOfMembers = 1;
 
     public Composition() {}
 
-    public Composition(String title, String creatorname, List<Track> tracks) {
+    public Composition(String title, String creatorName, List<Sound> sounds) {
         this.title = title;
-        this.creatorname = creatorname;
-        this.tracks = tracks;
+        this.creatorName = creatorName;
+        this.sounds = sounds;
+        sortSounds();
     }
 
-    public void release() { status = Status.RELEASED; }
+    //TODO sort by tracknr and startposition (Frontend muss nur noch die sounds für die jeweilige tracknummer raussuchen)
+    //Keine notwendige Sortierung im Frontend mehr?!
+    private void sortSounds() {
+    }
+
+    public void release() { status = Status.AVAILABLE; }
 
     public void pick() {
         status = Status.PICKED;
-        numberOfParticipants++;
+        numberOfMembers++;
     }
 
     public void block() {
@@ -57,56 +66,45 @@ public class Composition implements Serializable {
     }
 
     public void close() {
-        status = Status.CLOSED;
+        status = Status.COMPLETED;
     }
 
     @JsonIgnore
     public List<String> getFilenames() {
-        return tracks.stream().
-                flatMap(t -> t.getFilenames().stream())
+        return sounds.stream()
+                .map(s -> s.getFilename())
                 .collect(Collectors.toList());
     }
 
-    public void updateTracksAndRelease(List<Track> newTracks) {
+    public void addSounds(List<Sound> newSounds) {
+        sounds.addAll(newSounds);
+        sortSounds();
         release();
-        int trackPosition=0;
-        for (Track newTrack : newTracks) {
-            addNewSounds(trackPosition++, newTrack.getSounds());
-        }
-    }
-
-    private void addNewSounds(int trackPosition, List<Sound> newSounds) {
-        Track track = tracks.get(trackPosition);
-        track.addSounds(newSounds);
     }
 
     public String getSnippet() {
-        return tracks.get(0).getSounds().get(0).getFilename(); //TODO
+        return sounds.get(0).getFilename(); //TODO
     }
 
-    public int getDurationInMs() {
-        int duration = tracks.stream()
+    public int getDuration() {
+        int duration = sounds.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(Track::getDurationInMs)
+                .mapToInt(Sound::getDuration)
                 .sum();
 
         return duration;
-    }
-
-    public int getTrackPosition(Track track) {
-        return tracks.indexOf(track);
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<Track> getTracks() {
-        return tracks;
+    public List<Sound> getSounds() {
+        return sounds;
     }
 
-    public String getCreatorname() {
-        return creatorname;
+    public String getCreatorName() {
+        return creatorName;
     }
 
     public LocalDateTime getCreationDate() {
@@ -121,13 +119,21 @@ public class Composition implements Serializable {
         return title;
     }
 
-    public Integer getNumberOfParticipants() {
-        return numberOfParticipants;
+    public Integer getNumberOfMembers() {
+        return numberOfMembers;
     }
 
-    public void refreshFilenames() {
-        for (Track track : tracks) {
-            track.refreshFilenames();
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Composition that = (Composition) o;
+        return title.equals(that.title) &&
+                sounds.equals(that.sounds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, sounds);
     }
 }
