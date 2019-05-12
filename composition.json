@@ -6,10 +6,10 @@
       "sounds": [
         {
           "creatorname": "talal",
-          "durationInMs": 323000,
-          "filename": "sickomode.mp3",
+          "durationInMs": 2000,
+          "filename": "sound_1.ogg",
           "startPositionInMs": 0,
-          "title": "test"
+          "title": "Sound 1"
         }
       ]
     },
@@ -17,10 +17,10 @@
       "sounds": [
         {
           "creatorname": "talal",
-          "durationInMs": 323000,
-          "filename": "stargazing.mp3",
-          "startPositionInMs": 4000000,
-          "title": "Stargazing"
+          "durationInMs": 2000,
+          "filename": "sound_2.ogg",
+          "startPositionInMs": 4000,
+          "title": "Sound 2"
         }
       ]
     },
@@ -28,10 +28,10 @@
       "sounds": [
         {
           "creatorname": "talal",
-          "durationInMs": 323000,
-          "filename": "yosemite.mp3",
-          "startPositionInMs": 8000000,
-          "title": "Yosemite"
+          "durationInMs": 2000,
+          "filename": "sound_3.ogg",
+          "startPositionInMs": 6000,
+          "title": "Sound 3"
         }
       ]
     },
@@ -39,10 +39,10 @@
       "sounds": [
         {
           "creatorname": "talal",
-          "durationInMs": 323000,
-          "filename": "zeze.mp3",
-          "startPositionInMs": 16000000,
-          "title": "Zeze"
+          "durationInMs": 2000,
+          "filename": "sound_4.ogg",
+          "startPositionInMs": 8000,
+          "title": "Sound 4"
         }
       ]
     }

@@ -126,7 +126,7 @@ class CompositionController {
         if (composition.getStatus() == Status.PICKED) {
             composition.updateTracksAndRelease(newTracks);
             storageService.store(id, Arrays.asList(files));
-            return ResponseEntity.ok(assembler.toResource(composition));
+            return ResponseEntity.ok(assembler.toResource(compositionRepository.save(composition)));
         }
 
         throw new MethodNotAllowedException("release", composition.getStatus().name());

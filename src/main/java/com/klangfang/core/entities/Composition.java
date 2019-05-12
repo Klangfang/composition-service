@@ -16,26 +16,26 @@ import java.util.stream.Collectors;
 //@Table(name = "composition", schema = "compositions")
 public class Composition implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Long id;
 
-    @Column(nullable = false)
-    private String title;
+        @Column(nullable = false)
+        private String title;
 
-    @Column(nullable = false)
-    private String creatorname;
+        @Column(nullable = false)
+        private String creatorname;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Track> tracks;
+        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        private List<Track> tracks;
 
-    private LocalDateTime creationDate = LocalDateTime.now();
+        private LocalDateTime creationDate = LocalDateTime.now();
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.RELEASED;
+        @Column(nullable = false)
+        @Enumerated(EnumType.STRING)
+        private Status status = Status.RELEASED;
 
-    private Integer numberOfParticipants = 1;
+        private Integer numberOfParticipants = 1;
 
     public Composition() {}
 
