@@ -1,4 +1,4 @@
-package com.klangfang.core;
+package com.klangfang.core.entities.type;
 
 public enum Status {
 
@@ -6,4 +6,5 @@ public enum Status {
     PICKED,
     BLOCKED,
     COMPLETED //TODO WHEN? CLIENT OR SERVER?
+
 }

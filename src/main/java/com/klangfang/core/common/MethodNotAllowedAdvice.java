@@ -1,5 +1,6 @@
-package com.klangfang.core;
+package com.klangfang.core.common;
 
+import com.klangfang.core.exception.CompositionNotFoundException;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
