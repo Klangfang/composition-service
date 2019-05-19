@@ -1,4 +1,4 @@
-package com.klangfang.core;
+package com.klangfang.core.exception;
 
 public class CompositionNotFoundException extends RuntimeException {
 

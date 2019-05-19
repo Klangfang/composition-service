@@ -1,4 +1,4 @@
-package com.klangfang.core;
+package com.klangfang.core.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;

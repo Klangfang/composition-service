@@ -1,11 +1,15 @@
-package com.klangfang.core.repositories;
+package com.klangfang.core.service;
 
-import com.klangfang.core.*;
 import com.klangfang.core.entities.Composition;
 import com.klangfang.core.entities.Sound;
+import com.klangfang.core.entities.type.Status;
+import com.klangfang.core.exception.CompositionNotFoundException;
+import com.klangfang.core.exception.MethodNotAllowedException;
+import com.klangfang.core.response.CompositionOverview;
+import com.klangfang.core.response.CompositionResponse;
+import com.klangfang.core.ResponseTransformer;
 import com.klangfang.core.storage.StorageService;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,62 +17,67 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Component
 @Transactional
 public class CompositionService {
 
     private CompositionRepository repository;
-    private CompositionResourceAssembler assembler;
+    private ResponseTransformer transformer;
     private final StorageService storage;
 
     public CompositionService(CompositionRepository repository,
-                              CompositionResourceAssembler assembler,
+                              ResponseTransformer transformer,
                               StorageService storage) {
         this.repository = repository;
-        this.assembler = assembler;
+        this.transformer = transformer;
         this.storage = storage;
     }
 
-    public Resource<CompositionOverview> createComposition(Composition composition, MultipartFile[] files) {
+    public CompositionOverview createComposition(Composition composition, MultipartFile[] files) {
 
         repository.save(composition);
         storage.store(composition.getId(), List.of(files));
-        return assembler.toResource(composition);
+        return transformer.overview(composition);
     }
 
-    public List<Resource<CompositionOverview>> loadCompositionsOverview(Integer page, Integer size) {
-        List<Resource<CompositionOverview>> compositions = repository.findByStatus(
+    public Set<CompositionOverview> loadCompositionsOverview(Integer page, Integer size) {
+        Set<CompositionOverview> overviews = repository.findByStatus(
                 Status.valueOf(Status.AVAILABLE.name()),
                 PageRequest.of(page, size))
                 .stream()
-                .map(assembler::toResource)
-                .collect(Collectors.toList());
+                .map(transformer::overview)
+                .collect(Collectors.toSet());
 
-        return compositions;
+        return overviews;
     }
 
-    public Resource<Composition> pick(Long id) {
+    public CompositionResponse pick(Long id) throws CompositionNotFoundException {
+
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
 
         if (composition.getStatus() == Status.AVAILABLE) {
             composition.pick();
-            return assembler.toFullResource(composition);
+            return transformer.fullResponse(composition);
         }
 
         throw new MethodNotAllowedException("pick", composition.getStatus().name());
     }
 
-    public Resource<CompositionOverview> release(Long id, List<Sound> newSounds, MultipartFile[] files) {
+    public CompositionOverview release(Long id, List<Sound> newSounds, MultipartFile[] files)
+            throws CompositionNotFoundException {
+
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
 
         if (composition.getStatus() == Status.PICKED) {
             composition.addSounds(newSounds);
             storage.store(id, Arrays.asList(files));
-            return assembler.toResource(composition);
+            return transformer.overview(composition);
         }
 
         throw new MethodNotAllowedException("release", composition.getStatus().name());
@@ -80,4 +89,5 @@ public class CompositionService {
 
         return resource;
     }
+
 }

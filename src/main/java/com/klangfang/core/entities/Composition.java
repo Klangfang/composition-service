@@ -1,7 +1,7 @@
 package com.klangfang.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.klangfang.core.Status;
+import com.klangfang.core.entities.type.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

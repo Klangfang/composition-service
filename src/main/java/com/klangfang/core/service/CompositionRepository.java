@@ -1,6 +1,6 @@
-package com.klangfang.core.repositories;
+package com.klangfang.core.service;
 
-import com.klangfang.core.Status;
+import com.klangfang.core.entities.type.Status;
 import com.klangfang.core.entities.Composition;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

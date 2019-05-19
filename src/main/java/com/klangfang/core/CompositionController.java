@@ -2,11 +2,14 @@ package com.klangfang.core;
 
 import com.klangfang.core.entities.Composition;
 import com.klangfang.core.entities.Sound;
-import com.klangfang.core.repositories.CompositionService;
+import com.klangfang.core.exception.CompositionNotFoundException;
+import com.klangfang.core.response.CompositionOverview;
+import com.klangfang.core.response.CompositionResponse;
+import com.klangfang.core.response.OverviewResponse;
+import com.klangfang.core.service.CompositionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -32,12 +36,12 @@ class CompositionController {
         this.service = service;
     }
 
-    @GetMapping(value = "/{fileName:.+}", params = "compositionId")
-    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable String fileName,
-                                                 @RequestParam Long compositionId,
-                                                 HttpServletRequest request) {
+    @GetMapping(value = "/{id}/{fileName:.+}")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long id,
+                                                                             @PathVariable String fileName,
+                                                                             HttpServletRequest request) {
 
-        org.springframework.core.io.Resource resource = service.downloadFile(fileName, compositionId, request);
+        org.springframework.core.io.Resource resource = service.downloadFile(fileName, id, request);
         // Try to determine file's content type
         String contentType = null;
         try {
@@ -59,38 +63,64 @@ class CompositionController {
 
     @ApiOperation("Gets a list of composition overviews")
     @GetMapping(path = "/compositionsOverview", params = {"page", "size"}, produces = APPLICATION_HAL_JSON)
-    Resources<Resource<CompositionOverview>> compositionsOverview(@RequestParam Integer page,
-                                                                  @RequestParam Integer size) {
+    ResponseEntity<OverviewResponse> compositionsOverview(@RequestParam Integer page,
+                                                          @RequestParam Integer size) {
 
-       return new Resources<>(service.loadCompositionsOverview(page, size),
-               linkTo(methodOn(CompositionController.class).compositionsOverview(++page, size)).withSelfRel());
+
+        Set<CompositionOverview> overviews = service.loadCompositionsOverview(page, size);
+
+        if (overviews.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(new OverviewResponse(overviews,
+                linkTo(methodOn(CompositionController.class).compositionsOverview(++page, size)).toString()));
     }
 
     @ApiOperation("Creates a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
-    ResponseEntity<Resource<CompositionOverview>> newComposition(@RequestPart("composition") Composition composition,
+    ResponseEntity<CompositionOverview> newComposition(@RequestPart("composition") Composition composition,
                                                                  @RequestParam("files") MultipartFile[] files) {
 
         composition.release();
-        Resource<CompositionOverview> compositionOverview = service.createComposition(composition, files);
+
+        CompositionOverview overview = service.createComposition(composition, files);
+
         return ResponseEntity
                 .created(linkTo(methodOn(CompositionController.class).pick(composition.getId())).toUri())
-                .body(compositionOverview);
+                .body(overview);
     }
 
     @ApiOperation("Picks a composition and returns all information about it")
     @PutMapping(path = "/{id}/pick", produces = APPLICATION_HAL_JSON)
-    ResponseEntity<Resource<Composition>> pick(@PathVariable Long id) {
+    ResponseEntity<CompositionResponse> pick(@PathVariable Long id) {
 
-       return ResponseEntity.ok(service.pick(id));
+        try {
+
+            return ResponseEntity.ok(service.pick(id));
+
+        } catch (CompositionNotFoundException e) {
+
+            return ResponseEntity.unprocessableEntity().build();
+
+        }
+
     }
 
     @ApiOperation("Makes the composition available and adds new sounds to it")
     @PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
-    ResponseEntity<Resource<CompositionOverview>> release(@PathVariable Long id,
+    ResponseEntity<CompositionOverview> release(@PathVariable Long id,
                                                           @RequestPart("sounds") List<Sound> sounds,
                                                           @RequestParam("files") MultipartFile[] files) {
 
-        return ResponseEntity.ok(service.release(id, sounds, files));
+        try {
+
+            return ResponseEntity.ok(service.release(id, sounds, files));
+
+        } catch (CompositionNotFoundException e) {
+
+            return ResponseEntity.unprocessableEntity().build();
+
+        }
     }
 }
