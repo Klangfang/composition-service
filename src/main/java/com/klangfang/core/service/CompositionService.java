@@ -83,6 +83,19 @@ public class CompositionService {
         throw new MethodNotAllowedException("release", composition.getStatus().name());
     }
 
+    public CompositionOverview release(Long id) {
+
+        Composition composition = repository.findById(id)
+                .orElseThrow(() -> new CompositionNotFoundException(id));
+
+        if (composition.getStatus() == Status.PICKED) {
+            composition.addSounds();
+            return transformer.overview(composition);
+        }
+
+        throw new MethodNotAllowedException("release", composition.getStatus().name());
+    }
+
     public org.springframework.core.io.Resource downloadFile(String fileName, Long compositionId, HttpServletRequest request) {
         // Load file as Resource
         org.springframework.core.io.Resource resource = storage.loadFileAsResource(compositionId, fileName);
