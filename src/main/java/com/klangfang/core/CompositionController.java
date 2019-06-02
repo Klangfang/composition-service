@@ -97,7 +97,7 @@ class CompositionController {
 
         try {
 
-            return ResponseEntity.ok(service.pi ck(id));
+            return ResponseEntity.ok(service.pick(id));
 
         } catch (CompositionNotFoundException e) {
 
@@ -108,7 +108,7 @@ class CompositionController {
     }
 
     @ApiOperation("Makes the composition available and adds new sounds to it")
-    @PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
+    //@PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
     ResponseEntity<CompositionOverview> release(@PathVariable Long id,
                                                           @RequestPart("sounds") List<Sound> sounds,
                                                           @RequestParam("files") MultipartFile[] files) {
