@@ -81,6 +81,11 @@ public class Composition {
         release();
     }
 
+    public void addSounds() {
+        sortSounds();
+        release();
+    }
+
     public String getSnippet() {
         return sounds.get(0).getFilePath(); //TODO
     }

@@ -97,7 +97,7 @@ class CompositionController {
 
         try {
 
-            return ResponseEntity.ok(service.pick(id));
+            return ResponseEntity.ok(service.pi ck(id));
 
         } catch (CompositionNotFoundException e) {
 
@@ -116,6 +116,20 @@ class CompositionController {
         try {
 
             return ResponseEntity.ok(service.release(id, sounds, files));
+
+        } catch (CompositionNotFoundException e) {
+
+            return ResponseEntity.unprocessableEntity().build();
+
+        }
+    }
+
+    @PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
+    ResponseEntity<CompositionOverview> release(@PathVariable Long id) {
+
+        try {
+
+            return ResponseEntity.ok(service.release(id));
 
         } catch (CompositionNotFoundException e) {
 
