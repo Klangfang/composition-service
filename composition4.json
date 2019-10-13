@@ -1,31 +1,35 @@
 {
-  "title": "Klangfang",
+  "title": "Klangfang4",
   "creatorName": "talal",
    "sounds": [
         {
           "trackNumber": 0,
-          "title": "sound_1.ogg",
+          "filePath": "sound_1.ogg",
+          "title": "Sound 1",
           "startPosition": 0,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
           "trackNumber": 1,
-          "title": "sound_2.ogg",
+          "filePath": "sound_2.ogg",
+          "title": "Sound 2",
           "startPosition": 4000,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
           "trackNumber": 2,
-          "title": "sound_3.ogg",
+          "filePath": "sound_3.ogg",
+          "title": "Sound 3",
           "startPosition": 8000,
           "duration": 2000,
           "creatorName": "talal"
         },
         {
           "trackNumber": 3,
-          "title": "sound_4.ogg",
+          "filePath": "sound_4.ogg",
+          "title": "Sound 4",
           "startPosition": 12000,
           "duration": 2000,
           "creatorName": "talal"

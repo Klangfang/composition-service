@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,7 @@ class CompositionController {
                                                                              @PathVariable String fileName,
                                                                              HttpServletRequest request) {
 
+        System.out.println("Download klappt!");
         org.springframework.core.io.Resource resource = service.downloadFile(fileName, id, request);
         // Try to determine file's content type
         String contentType = null;
@@ -79,17 +81,30 @@ class CompositionController {
 
     @ApiOperation("Creates a new composition")
     @PostMapping(produces = APPLICATION_HAL_JSON)
-    ResponseEntity<CompositionOverview> newComposition(@RequestPart("composition") Composition composition,
+    ResponseEntity<CompositionOverview> newCompositionMultipart(@RequestPart("composition") Composition composition,
                                                                  @RequestParam("files") MultipartFile[] files) {
 
         composition.release();
 
-        CompositionOverview overview = service.createComposition(composition, files);
+        CompositionOverview overview = service.createCompositionMultipart(composition, files);
 
         return ResponseEntity
                 .created(linkTo(methodOn(CompositionController.class).pick(composition.getId())).toUri())
                 .body(overview);
     }
+
+   /* @ApiOperation("Creates a new composition")
+    @PostMapping(produces = APPLICATION_HAL_JSON)
+    ResponseEntity<CompositionOverview> newComposition(@RequestBody Composition composition) {
+
+        composition.release();
+
+        CompositionOverview overview = service.createComposition(composition);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(CompositionController.class).pick(composition.getId())).toUri())
+                .body(overview);
+    }*/
 
     @ApiOperation("Picks a composition and returns all information about it")
     @PutMapping(path = "/{id}/pick", produces = APPLICATION_HAL_JSON)
@@ -108,7 +123,7 @@ class CompositionController {
     }
 
     @ApiOperation("Makes the composition available and adds new sounds to it")
-    //@PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
+    @PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
     ResponseEntity<CompositionOverview> release(@PathVariable Long id,
                                                           @RequestPart("sounds") List<Sound> sounds,
                                                           @RequestParam("files") MultipartFile[] files) {
@@ -124,7 +139,7 @@ class CompositionController {
         }
     }
 
-    @PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
+    //@PutMapping(path = "/{id}/release", produces = APPLICATION_HAL_JSON)
     ResponseEntity<CompositionOverview> release(@PathVariable Long id) {
 
         try {
