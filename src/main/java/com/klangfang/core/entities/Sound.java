@@ -1,14 +1,21 @@
 package com.klangfang.core.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.klangfang.core.ResponseTransformer;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
 
 /**
  * Obwohl gleiche Sounds, hinzegefügt werden können. Wir betrachten jeden Sound besonders
  * TODO create unique constraints in db with (tracknumber,startposition,duration)
  */
+@JsonIgnoreProperties
 @Entity
 public class Sound {
 
@@ -20,11 +27,11 @@ public class Sound {
     @Column(nullable = false)
     private Integer trackNumber;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String filePath;
 
     @Column(nullable = false)
-    private String title;
+    private String title = LocalDateTime.now().toString() + THREE_GP.getName();
 
     @Min(0)
     @Column(nullable = false)
@@ -40,9 +47,8 @@ public class Sound {
     public Sound() {
     }
 
-    public Sound(String filePath, String title, String creatorName, @Min(0) Integer startPosition,
+    public Sound(String title, String creatorName, @Min(0) Integer startPosition,
                  @Min(0) int duration, Integer trackNumber) {
-        this.filePath = filePath;
         this.title = title;
         this.creatorName = creatorName;
         this.startPosition = startPosition;
@@ -90,5 +96,19 @@ public class Sound {
     @Override
     public int hashCode() {
         return Objects.hash(trackNumber, startPosition);
+    }
+
+     public void generateFilePath(Long compositionId) {
+
+        ResponseTransformer transformer = new ResponseTransformer();
+        filePath = transformer.getSoundRelativePath(compositionId, title);
+
+    }
+
+    //TODO remove later :; generate via field declaration
+    public void generateTitle() {
+
+        title = LocalDateTime.now().toString() + THREE_GP.getName();
+
     }
 }

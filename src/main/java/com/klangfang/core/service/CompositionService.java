@@ -37,13 +37,23 @@ public class CompositionService {
         this.storage = storage;
     }
 
-    public CompositionOverview createComposition(Composition composition, MultipartFile[] files) {
+    public CompositionOverview createCompositionMultipart(Composition composition, MultipartFile[] files) {
 
+        composition.generateSoundTitles();
         repository.save(composition);
-        storage.store(composition.getId(), List.of(files));
+        composition.generateFilePaths();
+        storage.storeMultiPart(composition, List.of(files));
         return transformer.overview(composition);
     }
 
+    /*public CompositionOverview createComposition(Composition composition) {
+
+        repository.save(composition);
+        storage.store(composition);
+        return transformer.overview(composition);
+
+    }
+*/
     public Set<CompositionOverview> loadCompositionsOverview(Integer page, Integer size) {
         Set<CompositionOverview> overviews = repository.findByStatus(
                 Status.valueOf(Status.AVAILABLE.name()),
@@ -76,7 +86,7 @@ public class CompositionService {
 
         if (composition.getStatus() == Status.PICKED) {
             composition.addSounds(newSounds);
-            storage.store(id, Arrays.asList(files));
+            storage.storeMultiPart(composition, Arrays.asList(files));
             return transformer.overview(composition);
         }
 

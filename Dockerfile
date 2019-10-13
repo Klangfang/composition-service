@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
+FROM openjdk:12-alpine
 VOLUME /tmp
 COPY target/composition-service-1.0.jar composition-service-1.0.jar
 ARG DEPENDENCY=target/dependency

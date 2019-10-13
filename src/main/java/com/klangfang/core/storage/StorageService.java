@@ -1,5 +1,6 @@
 package com.klangfang.core.storage;
 
+import com.klangfang.core.entities.Composition;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,9 @@ import java.util.stream.Stream;
 public interface StorageService {
 
 
-    List<String> store(Long compositionId, List<MultipartFile> files);
+    void storeMultiPart(Composition composition, List<MultipartFile> files);
+
+    //List<String> store(Composition composition);
 
     Resource loadFileAsResource(Long compositionId, String filename);
 

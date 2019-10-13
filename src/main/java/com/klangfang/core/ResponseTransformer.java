@@ -42,4 +42,11 @@ public class ResponseTransformer {
 
         return response;
     }
+
+    public String getSoundRelativePath(Long compositionId, String filePath) {
+
+        String soundRelativePath = linkTo(methodOn(CompositionController.class)
+                .downloadFile(compositionId, filePath, null)).toString();
+        return soundRelativePath;
+    }
 }

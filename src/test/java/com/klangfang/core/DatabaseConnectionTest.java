@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -24,12 +25,14 @@ public class DatabaseConnectionTest {
 
     @Test
     public void testConnectionOfSuccess() {
-        Sound sound = new Sound("SoundTitle", "soundxy.3gp", "Riot", 0,
+        Sound sound = new Sound("sound" + THREE_GP.getName(), "Riot", 0,
                 10000, 1);
         Composition composition = new Composition("Composition in production", "Venom", List.of(sound));
+        composition.generateFilePaths();
         Composition afterSave = compositionRepository.save(composition);
 
         assertThat(afterSave).isNotNull();
         assertThat(afterSave.getId()).isPositive();
+        assertThat(afterSave.getSounds().get(0).getTitle()).isEqualTo("sound" + THREE_GP.getName());
     }
 }

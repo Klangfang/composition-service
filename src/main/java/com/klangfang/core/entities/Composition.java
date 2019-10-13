@@ -1,6 +1,5 @@
 package com.klangfang.core.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.klangfang.core.entities.type.Status;
 
 import javax.persistence.*;
@@ -48,6 +47,13 @@ public class Composition {
         sortSounds();
     }
 
+   /* public void setFilePath(String filePath, int soundPosition) {
+        Sound sound = sounds.get(soundPosition);
+        sound.setFilePath(filePath);
+        sounds.remove(soundPosition);
+        sounds.add(soundPosition, sound);
+    }*/
+
     //TODO sort by tracknr and startposition (Frontend muss nur noch die sounds für die jeweilige tracknummer raussuchen)
     //Keine notwendige Sortierung im Frontend mehr?!
     private void sortSounds() {
@@ -58,6 +64,13 @@ public class Composition {
     public void pick() {
         status = Status.PICKED;
         numberOfMembers++;
+        sounds = sounds.stream().map(sound -> getSoundWithRelativePath(sound)).collect(Collectors.toList());
+    }
+
+    private Sound getSoundWithRelativePath(Sound sound) {
+        //sound.setRelativePath(id);
+        Sound soundWithRelativePath = sound;
+        return soundWithRelativePath;
     }
 
     public void block() {
@@ -68,12 +81,12 @@ public class Composition {
         status = Status.COMPLETED;
     }
 
-    @JsonIgnore
+    /*@JsonIgnore
     public List<String> getFilenames() {
         return sounds.stream()
                 .map(s -> s.getFilePath())
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public void addSounds(List<Sound> newSounds) {
         sounds.addAll(newSounds);
@@ -87,7 +100,7 @@ public class Composition {
     }
 
     public String getSnippet() {
-        return sounds.get(0).getFilePath(); //TODO
+        return sounds.get(0).getTitle();
     }
 
     public int getDuration() {
@@ -139,5 +152,33 @@ public class Composition {
     @Override
     public int hashCode() {
         return Objects.hash(title, sounds);
+    }
+
+    public void generateFilePaths() {
+
+        sounds = sounds.stream()
+                .map(sound -> {
+                    sound.generateFilePath(id);
+                    return sound;
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    public void generateSoundTitles() {
+
+        sounds = sounds.stream()
+                .map(sound -> {
+                    sound.generateTitle();
+                    return sound;
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    public String getSoundTile(int soundPosition) {
+
+        return sounds.get(soundPosition).getTitle();
+
     }
 }
