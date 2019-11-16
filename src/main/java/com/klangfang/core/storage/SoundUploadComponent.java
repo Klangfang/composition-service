@@ -25,13 +25,13 @@ public class SoundUploadComponent {
     @Value("${klangfang.cloudinary.publicId}")
     private String publicId;
 
-    @Value("${klangfang.cloudinary.cloudName}")
+    //@Value("${klangfang.cloudinary.cloudName}")
     private String cloudName;
 
-    @Value("${klangfang.cloudinary.apiKey}")
+    //@Value("${klangfang.cloudinary.apiKey}")
     private String apiKey;
 
-    @Value("${klangfang.cloudinary.apiSecret}")
+    //@Value("${klangfang.cloudinary.apiSecret}")
     private String apiSecret;
 
     private static final Logger LOG = LogManager.getLogger(SoundUploadComponent.class);
