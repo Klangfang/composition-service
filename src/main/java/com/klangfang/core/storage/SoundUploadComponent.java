@@ -17,6 +17,8 @@ import java.util.UUID;
 @Component
 public class SoundUploadComponent {
 
+    private static final Logger LOG = LogManager.getLogger(SoundUploadComponent.class);
+
     private SingletonManager cloudinaryManager;
 
     @Value("${klangfang.cloudinary.base}")
@@ -25,28 +27,11 @@ public class SoundUploadComponent {
     @Value("${klangfang.cloudinary.publicId}")
     private String publicId;
 
-    //@Value("${klangfang.cloudinary.cloudName}")
-    private String cloudName;
-
-    //@Value("${klangfang.cloudinary.apiKey}")
-    private String apiKey;
-
-    //@Value("${klangfang.cloudinary.apiSecret}")
-    private String apiSecret;
-
-    private static final Logger LOG = LogManager.getLogger(SoundUploadComponent.class);
-
 
     @PostConstruct
-    public void construct() throws IOException {
-
-        //Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-          //      "cloud_name", cloudName,
-            //            "api_key", apiKey,
-              //          "api_secret", apiSecret));
+    public void construct() {
 
         cloudinaryManager = new SingletonManager();
-        //cloudinaryManager.setCloudinary(cloudinary);
         cloudinaryManager.init();
 
         //uploadSound(Files.readAllBytes(Path.of("/home/casasky/Musik/sound_1.ogg")));
