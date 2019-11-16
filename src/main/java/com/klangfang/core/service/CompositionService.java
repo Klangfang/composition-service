@@ -83,6 +83,8 @@ public class CompositionService {
 
         if (composition.getStatus() == Status.PICKED) {
 
+            composition.release();
+
             List<Sound> sounds = newSounds.stream()
                     .map(s -> s.toEntity(soundUploadComponent.uploadSound(s.soundBytes)))
                     .collect(Collectors.toList());
@@ -96,19 +98,5 @@ public class CompositionService {
         throw new MethodNotAllowedException("release", composition.getStatus().name());
 
     }
-
-    public CompositionOverview release(Long id) {
-
-        Composition composition = repository.findById(id)
-                .orElseThrow(() -> new CompositionNotFoundException(id));
-
-        if (composition.getStatus() == Status.PICKED) {
-            composition.addSounds();
-            return CompositionOverview.build(composition);
-        }
-
-        throw new MethodNotAllowedException("release", composition.getStatus().name());
-    }
-
 
 }

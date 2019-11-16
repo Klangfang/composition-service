@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
@@ -19,7 +20,7 @@ import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
 public class Sound {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Min(0)
@@ -30,7 +31,7 @@ public class Sound {
     private String url;
 
     @Column(nullable = false)
-    private String title = LocalDateTime.now().toString() + THREE_GP.getName();
+    private String title = "NOT USED YET in APP";
 
     @Min(0)
     @Column(nullable = false)
@@ -42,6 +43,9 @@ public class Sound {
 
     @Column(nullable = false)
     private String creatorName;
+
+    @Column(nullable = false)
+    private ZonedDateTime creationTime = ZonedDateTime.now();
 
     public Sound() {
     }

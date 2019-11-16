@@ -17,10 +17,9 @@ import java.util.stream.Collectors;
 public class Composition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //TODO @NaturalId
     @Column(nullable = false)
     private String title;
 
