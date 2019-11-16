@@ -25,14 +25,12 @@ public class DatabaseConnectionTest {
 
     @Test
     public void testConnectionOfSuccess() {
-        Sound sound = new Sound("sound" + THREE_GP.getName(), "Riot", 0,
-                10000, 1);
+        Sound sound = new Sound("Riot", 0,
+                10000, 1, "S3_URL");
         Composition composition = new Composition("Composition in production", "Venom", List.of(sound));
-        composition.generateFilePaths();
         Composition afterSave = compositionRepository.save(composition);
 
         assertThat(afterSave).isNotNull();
         assertThat(afterSave.getId()).isPositive();
-        assertThat(afterSave.getSounds().get(0).getTitle()).isEqualTo("sound" + THREE_GP.getName());
     }
 }

@@ -1,8 +1,4 @@
-FROM openjdk:12-alpine
-VOLUME /tmp
-COPY target/composition-service-1.0.jar composition-service-1.0.jar
-ARG DEPENDENCY=target/dependency
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD ["java","-Dspring.profiles.active=prod","-jar","composition-service-1.0.jar"]
+FROM openjdk:13-alpine
+COPY target/libs /app/libs
+COPY target/composition-service.jar /app/libs/
+ENTRYPOINT ["java","-Dspring.profiles.active=prod","-cp","app:app/libs/*","com.klangfang.core.Application"]

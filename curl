@@ -1,2 +1,0 @@
-curl -i -X POST -H "Content-Type: multipart/mixed" -F "composition=@composition.json; type=application/json" -F "file=@sickomode.mp3; type=audio/mpeg"  http://localhost:5000/compositions
-curl -i -X POST -H "Content-type: multipart/mixed" -F "composition=@composition.json; type=application/json" -F "files=@sickomode.mp3; type=audio/mpeg" -F "files=@stargazing.mp3; type=audio/mpeg" -F "files=@yosemite.mp3; type=audio/mpeg" -F "files=@zeze.mp3; type=audio/mpeg" http://localhost:5000/compositions

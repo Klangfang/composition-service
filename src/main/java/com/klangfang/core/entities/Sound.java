@@ -2,7 +2,6 @@ package com.klangfang.core.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.klangfang.core.ResponseTransformer;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -27,8 +26,8 @@ public class Sound {
     @Column(nullable = false)
     private Integer trackNumber;
 
-    //@Column(nullable = false)
-    private String filePath;
+    @Column(nullable = false)
+    private String url;
 
     @Column(nullable = false)
     private String title = LocalDateTime.now().toString() + THREE_GP.getName();
@@ -47,21 +46,24 @@ public class Sound {
     public Sound() {
     }
 
-    public Sound(String title, String creatorName, @Min(0) Integer startPosition,
-                 @Min(0) int duration, Integer trackNumber) {
-        this.title = title;
+    public Sound(String creatorName, @Min(0) Integer startPosition,
+                 @Min(0) int duration, Integer trackNumber, String url) {
+
+        this.title = LocalDateTime.now().toString() + THREE_GP.getName();
         this.creatorName = creatorName;
         this.startPosition = startPosition;
         this.duration = duration;
         this.trackNumber = trackNumber;
+        this.url = url;
+
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getUrl() {
+        return url;
     }
 
     public Integer getStartPosition() {
@@ -98,17 +100,4 @@ public class Sound {
         return Objects.hash(trackNumber, startPosition);
     }
 
-     public void generateFilePath(Long compositionId) {
-
-        ResponseTransformer transformer = new ResponseTransformer();
-        filePath = transformer.getSoundRelativePath(compositionId, title);
-
-    }
-
-    //TODO remove later :; generate via field declaration
-    public void generateTitle() {
-
-        title = LocalDateTime.now().toString() + THREE_GP.getName();
-
-    }
 }
