@@ -47,12 +47,6 @@ public class Composition {
         sortSounds();
     }
 
-   /* public void setFilePath(String filePath, int soundPosition) {
-        Sound sound = sounds.get(soundPosition);
-        sound.setFilePath(filePath);
-        sounds.remove(soundPosition);
-        sounds.add(soundPosition, sound);
-    }*/
 
     //TODO sort by tracknr and startposition (Frontend muss nur noch die sounds für die jeweilige tracknummer raussuchen)
     //Keine notwendige Sortierung im Frontend mehr?!
@@ -81,12 +75,6 @@ public class Composition {
         status = Status.COMPLETED;
     }
 
-    /*@JsonIgnore
-    public List<String> getFilenames() {
-        return sounds.stream()
-                .map(s -> s.getFilePath())
-                .collect(Collectors.toList());
-    }*/
 
     public void addSounds(List<Sound> newSounds) {
         sounds.addAll(newSounds);
@@ -100,7 +88,7 @@ public class Composition {
     }
 
     public String getSnippet() {
-        return sounds.get(0).getTitle();
+        return sounds.get(0).getUrl();
     }
 
     public int getDuration() {
@@ -152,28 +140,6 @@ public class Composition {
     @Override
     public int hashCode() {
         return Objects.hash(title, sounds);
-    }
-
-    public void generateFilePaths() {
-
-        sounds = sounds.stream()
-                .map(sound -> {
-                    sound.generateFilePath(id);
-                    return sound;
-                })
-                .collect(Collectors.toList());
-
-    }
-
-    public void generateSoundTitles() {
-
-        sounds = sounds.stream()
-                .map(sound -> {
-                    sound.generateTitle();
-                    return sound;
-                })
-                .collect(Collectors.toList());
-
     }
 
     public String getSoundTile(int soundPosition) {

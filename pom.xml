@@ -3,157 +3,203 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <packaging>jar</packaging>
+
   <groupId>com.klangfang</groupId>
   <artifactId>composition-service</artifactId>
   <version>1.0</version>
-  <packaging>jar</packaging>
   <name>composition-service</name>
   <description>Composition Service to manage user compositions for the Klangfang app</description>
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.2.RELEASE</version>
-  </parent>
-
   <properties>
-    <java.version>11</java.version>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <docker.image.prefix>casasky</docker.image.prefix>
+
+    <!-- compiler -->
+    <jdk.version>13</jdk.version>
+
+    <!-- dependencies -->
+
+    <!-- spring -->
+    <dependencies.spring-boot.version>2.2.1.RELEASE</dependencies.spring-boot.version>
+    <dependencies.spring-data.version>3.2.1.RELEASE</dependencies.spring-data.version>
+
+    <!-- cloudinary -->
+    <dependencies.cloudinary.version>1.24.0</dependencies.cloudinary.version>
+
+    <!--  hibernate -->
+    <dependencies.hibernate.version>5.4.8.Final</dependencies.hibernate.version>
+
+    <!-- database drivers -->
+    <dependencies.postgresql.version>42.2.8</dependencies.postgresql.version>
+    <dependencies.HikaryCP.version>3.4.1</dependencies.HikaryCP.version>
+    <dependencies.h2database.version>1.4.200</dependencies.h2database.version>
+
+    <!-- plugins -->
+
+    <!-- mvn compiler -->
+    <plugins.maven-compiler.version>3.8.1</plugins.maven-compiler.version>
+    <plugins.maven-dependency.version>3.1.1</plugins.maven-dependency.version>
+
   </properties>
 
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-rest</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-rest-hal-browser</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
       <scope>test</scope>
     </dependency>
 
+    <!-- Hibernate -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${dependencies.hibernate.version}</version>
+    </dependency>
+
+    <!-- Postgresql -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+      <version>${dependencies.postgresql.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.zaxxer</groupId>
-      <artifactId>HikariCP</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-
+    <!-- H2 -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <version>${dependencies.h2database.version}</version>
       <scope>runtime</scope>
     </dependency>
 
+    <!-- HikaryCP production databases needs pooling datasource - this chooses the specific implementation -->
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>2.9.2</version>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>${dependencies.HikaryCP.version}</version>
     </dependency>
 
+    <!-- Cloudinary -->
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-data-rest</artifactId>
-      <version>2.9.2</version>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http44</artifactId>
+      <version>${dependencies.cloudinary.version}</version>
     </dependency>
-
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-bean-validators</artifactId>
-      <version>2.9.2</version>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-taglib</artifactId>
+      <version>${dependencies.cloudinary.version}</version>
+      <!-- -older version does not support getVirtualServerName-->
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
-      <version>2.9.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>27.0-android</version>
-    </dependency>
-
-    <!--<dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-    </dependency>-->
 
   </dependencies>
 
   <build>
+
+    <finalName>composition-service</finalName>
+
+    <!-- delivering spring.properties -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
     <plugins>
+
+      <!-- determine jdk version for maven compiler -->
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>1.4.10</version>
+        <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <repository>${docker.image.prefix}/${project.artifactId}</repository>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <compilerArgs>
+            <!-- allow jackson to access parameters names of constructors -->
+            <arg>-parameters</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+
+        <!-- build external libs to /libs folder -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>copy-dependencies</id>
+              <phase>package</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                <includeScope>runtime</includeScope>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${plugins.maven-compiler.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${plugins.maven-dependency.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>

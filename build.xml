@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="clean_install_default" name="composition-service">
+    <property name="host.production" value="not_active"/>
+    <target name="clean_install_default">
+        <clean_install/>
+    </target>
+    <!-- ======= various ======= -->
+    <target name="check_dependency_updates">
+        <mvn opts="versions:display-dependency-updates"/>
+    </target>
+    <!-- ======= macros ======= -->
+    <macrodef name="clean_install">
+        <attribute name="mvnArgs" default=""/>
+        <sequential>
+            <git_short-hash outputproperty="git_hash" />
+            <propertyfile file="src/main/resources-dynamic/release.properties">
+                <entry key="version" value="${git_hash}"/>
+            </propertyfile>
+            <mvn opts="clean install @{mvnArgs}" />
+        </sequential>
+    </macrodef>
+    <macrodef name="git_short-hash">
+        <attribute name="outputproperty"/>
+        <sequential>
+            <shell-output cmd="git log -1 --pretty='%h'" outputproperty="@{outputproperty}"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="mvn">
+        <attribute name="opts"/>
+        <sequential>
+            <echo message="@{opts}"/>
+            <exec executable="/bin/bash" failonerror="true">
+                <arg value="--login"/>
+                <arg value="-c"/>
+                <arg value="mvn @{opts}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+    <macrodef name="shell">
+        <attribute name="cmd"/>
+        <sequential>
+            <exec executable="/bin/bash">
+                <arg value="--login"/>
+                <arg value="-c"/>
+                <arg value="@{cmd}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+    <macrodef name="shell-output">
+        <attribute name="cmd"/>
+        <attribute name="outputproperty" />
+        <sequential>
+            <exec executable="/bin/bash" outputproperty="@{outputproperty}">
+                <arg value="--login"/>
+                <arg value="-c"/>
+                <arg value="@{cmd}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+</project>
