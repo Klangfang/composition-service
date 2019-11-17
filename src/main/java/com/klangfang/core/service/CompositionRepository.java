@@ -22,7 +22,7 @@ public interface CompositionRepository extends JpaRepository<Composition, Long> 
      * @param status
      * @return list of composition having the given status
      */
-    List<Composition> findByStatus(Status status, Pageable pageable);
+    List<Composition> findByStatusOrderByCreationTime(Status status, Pageable pageable);
 
     /**
      *

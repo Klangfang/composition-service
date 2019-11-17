@@ -3,10 +3,9 @@ package com.klangfang.core.entities;
 import com.klangfang.core.entities.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Track vs. No Track
@@ -26,10 +25,8 @@ public class Composition {
     @Column(nullable = false)
     private String creatorName;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "composition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Sound> sounds;
-
-    private LocalDateTime creationDate = LocalDateTime.now();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -37,51 +34,65 @@ public class Composition {
 
     private Integer numberOfMembers = 1;
 
+    @Column(nullable = false)
+    private Integer maximumNumberOfMembers;
+
+    @Column(nullable = false)
+    private ZonedDateTime creationTime = ZonedDateTime.now();
+
     public Composition() {}
 
-    public Composition(String title, String creatorName, List<Sound> sounds) {
+    public Composition(String title, String creatorName, List<Sound> sounds, Integer maximumNumberOfMembers) {
         this.title = title;
         this.creatorName = creatorName;
         this.sounds = sounds;
+        this.maximumNumberOfMembers = maximumNumberOfMembers;
         sortSounds();
     }
 
+    public boolean hasReachedLimitOfMembers() {
+        return numberOfMembers == maximumNumberOfMembers;
+    }
 
     //TODO sort by tracknr and startposition (Frontend muss nur noch die sounds für die jeweilige tracknummer raussuchen)
     //Keine notwendige Sortierung im Frontend mehr?!
     private void sortSounds() {
     }
 
-    public void release() { status = Status.AVAILABLE; }
+    public boolean isAvailable() {
+        return status == Status.AVAILABLE;
+    }
+
+    public boolean isPicked() {
+        return status == Status.PICKED;
+    }
+
+    private void release() {
+        status = Status.AVAILABLE;
+    }
 
     public void pick() {
         status = Status.PICKED;
         numberOfMembers++;
-        sounds = sounds.stream().map(sound -> getSoundWithRelativePath(sound)).collect(Collectors.toList());
     }
 
-    private Sound getSoundWithRelativePath(Sound sound) {
-        //sound.setRelativePath(id);
-        Sound soundWithRelativePath = sound;
-        return soundWithRelativePath;
-    }
-
-    public void block() {
-        status = Status.BLOCKED;
-    }
-
-    public void close() {
+    private void complete() {
         status = Status.COMPLETED;
     }
 
+    public void upgrade(List<Sound> sounds) {
 
-    public void addSounds(List<Sound> newSounds) {
-        sounds.addAll(newSounds);
-        sortSounds();
-        release();
+        addSounds(sounds);
+        if (hasReachedLimitOfMembers()) {
+            complete();
+        } else {
+            release();
+        }
+
     }
 
-    public void addSounds() {
+    private void addSounds(List<Sound> newSounds) {
+        sounds.addAll(newSounds);
         sortSounds();
         release();
     }
@@ -111,12 +122,12 @@ public class Composition {
         return creatorName;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public ZonedDateTime getCreationTime() {
+        return creationTime;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getStatus() {
+        return status.name();
     }
 
     public String getTitle() {
@@ -132,18 +143,11 @@ public class Composition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Composition that = (Composition) o;
-        return title.equals(that.title) &&
-                sounds.equals(that.sounds);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, sounds);
-    }
-
-    public String getSoundTile(int soundPosition) {
-
-        return sounds.get(soundPosition).getTitle();
-
+        return Objects.hash(id);
     }
 }

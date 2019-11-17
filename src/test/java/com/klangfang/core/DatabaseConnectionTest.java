@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +26,7 @@ public class DatabaseConnectionTest {
     public void testConnectionOfSuccess() {
         Sound sound = new Sound("Riot", 0,
                 10000, 1, "S3_URL");
-        Composition composition = new Composition("Composition in production", "Venom", List.of(sound));
+        Composition composition = new Composition("Composition in production", "Venom", List.of(sound), 4);
         Composition afterSave = compositionRepository.save(composition);
 
         assertThat(afterSave).isNotNull();

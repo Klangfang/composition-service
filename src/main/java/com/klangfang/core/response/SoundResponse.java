@@ -10,8 +10,6 @@ public class SoundResponse {
 
     public String url;
 
-    public String title;
-
     public Integer startPosition;
 
     public Integer duration;
@@ -21,7 +19,6 @@ public class SoundResponse {
     private SoundResponse(Long id,
                           Integer trackNumber,
                           String url,
-                          String title,
                           Integer startPosition,
                           Integer duration,
                           String creatorName) {
@@ -29,7 +26,6 @@ public class SoundResponse {
         this.id = id;
         this.trackNumber = trackNumber;
         this.url = url;
-        this.title = title;
         this.startPosition = startPosition;
         this.duration = duration;
         this.creatorName = creatorName;
@@ -41,7 +37,6 @@ public class SoundResponse {
                 s.getId(),
                 s.getTrackNumber(),
                 s.getUrl(),
-                s.getTitle(),
                 s.getStartPosition(),
                 s.getDuration(),
                 s.getCreatorName()
