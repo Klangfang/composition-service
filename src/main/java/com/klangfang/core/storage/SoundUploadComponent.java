@@ -67,7 +67,7 @@ public class SoundUploadComponent {
                     "public_id", soundKey,
                     //blebt so"folder", publicId,
                     "use_filename", false,
-                    "resource_type", "raw"
+                    "resource_type", "video"
             );
 
             Map upload = Singleton.getCloudinary().uploader().upload(soundBytes, params);

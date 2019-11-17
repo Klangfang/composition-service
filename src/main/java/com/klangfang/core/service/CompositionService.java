@@ -58,8 +58,8 @@ public class CompositionService {
 
 
     public Set<CompositionOverview> loadCompositionsOverview(Integer page, Integer size) {
-        Set<CompositionOverview> overviews = repository.findByStatusOrderByCreationTime(
-                Status.valueOf(Status.AVAILABLE.name()),
+        Set<CompositionOverview> overviews = repository.findByStatusOrderByCreationTimeDesc(
+                Status.AVAILABLE,
                 PageRequest.of(page, size))
                 .stream()
                 .map(CompositionOverview::build)
