@@ -7,6 +7,7 @@ import com.klangfang.core.response.CompositionOverview;
 import com.klangfang.core.response.CompositionResponse;
 import com.klangfang.core.response.OverviewResponse;
 import com.klangfang.core.service.CompositionService;
+import com.klangfang.core.service.UpdateRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ class CompositionController {
 
         return ResponseEntity
                 .created(linkTo(methodOn(CompositionController.class)
-                        .update(overview.id, request, UpdateRequest.PICK))
+                        .update(overview.id, request, UpdateRequest.OPEN))
                         .toUri())
                 .body(overview);
 
@@ -68,12 +69,12 @@ class CompositionController {
     @PutMapping("/{id}")
     ResponseEntity<CompositionResponse> update(@PathVariable Long id,
                                                @RequestBody CompositionUpdateRequest request,
-                                               @RequestParam(defaultValue = "RELEASE") UpdateRequest updateRequest) {
+                                               @RequestParam(defaultValue = "CANCEL") UpdateRequest updateRequest) {
 
         try {
 
             LOG.debug("----> " + request.sounds);
-            return ResponseEntity.ok(updateRequest.isPick() ? service.pick(id) : service.release(id, request.sounds));
+            return ResponseEntity.ok(service.update(id, request, updateRequest));
 
         } catch (CompositionNotFoundException e) {
 

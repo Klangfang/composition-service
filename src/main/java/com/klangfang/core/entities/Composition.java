@@ -25,7 +25,8 @@ public class Composition {
     @Column(nullable = false)
     private String creatorName;
 
-    @OneToMany(mappedBy = "composition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    //mappedBy = "composition"
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Sound> sounds;
 
     @Column(nullable = false)
@@ -73,21 +74,27 @@ public class Composition {
 
     public void pick() {
         status = Status.PICKED;
-        numberOfMembers++;
     }
 
     private void complete() {
         status = Status.COMPLETED;
     }
 
-    public void upgrade(List<Sound> sounds) {
+    public void join(List<Sound> sounds) {
 
+        numberOfMembers++;
         addSounds(sounds);
         if (hasReachedLimitOfMembers()) {
             complete();
         } else {
             release();
         }
+
+    }
+
+    public void cancel() {
+
+        release();
 
     }
 
@@ -98,6 +105,9 @@ public class Composition {
     }
 
     public String getSnippet() {
+        if (sounds.isEmpty()) {
+            throw new RuntimeException("Can not find snippet due to sound list is empty");
+        }
         return sounds.get(0).getUrl();
     }
 
