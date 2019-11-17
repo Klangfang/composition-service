@@ -6,6 +6,7 @@ import com.klangfang.core.entities.type.Status;
 import com.klangfang.core.exception.CompositionNotFoundException;
 import com.klangfang.core.exception.MethodNotAllowedException;
 import com.klangfang.core.request.CompositionRequest;
+import com.klangfang.core.request.CompositionUpdateRequest;
 import com.klangfang.core.request.SoundRequest;
 import com.klangfang.core.response.CompositionOverview;
 import com.klangfang.core.response.CompositionResponse;
@@ -43,6 +44,10 @@ public class CompositionService {
                 .map(s -> s.toEntity(soundUploadComponent.uploadSound(s.soundBytes)))
                 .collect(Collectors.toList());
 
+        if (sounds.isEmpty()) {
+            throw new IllegalArgumentException("sounds list can not be empty");
+        }
+
         Composition composition = new Composition(compositionRequest.title, compositionRequest.creatorName, sounds, 4);
 
         repository.save(composition);
@@ -63,7 +68,14 @@ public class CompositionService {
         return overviews;
     }
 
-    public CompositionResponse pick(Long id) throws CompositionNotFoundException {
+    public CompositionResponse update(Long id, CompositionUpdateRequest request, UpdateRequest updateRequest) {
+
+        return updateRequest.isOpen() ? open(id) : updateRequest.isCancel() ? cancel(id) : join(id, request.sounds);
+
+    }
+
+
+    private CompositionResponse open(Long id) throws CompositionNotFoundException {
 
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
@@ -77,7 +89,7 @@ public class CompositionService {
 
     }
 
-    public CompositionResponse release(Long id, List<SoundRequest> newSounds) throws CompositionNotFoundException {
+    private CompositionResponse join(Long id, List<SoundRequest> newSounds) throws CompositionNotFoundException {
 
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
@@ -88,13 +100,26 @@ public class CompositionService {
                     .map(s -> s.toEntity(soundUploadComponent.uploadSound(s.soundBytes)))
                     .collect(Collectors.toList());
 
-            composition.upgrade(sounds);
+            composition.join(sounds);
 
             return CompositionResponse.build(composition);
 
         }
 
         throw new MethodNotAllowedException("release", composition.getStatus());
+
+    }
+
+    private CompositionResponse cancel(Long id) {
+
+        Composition composition = repository.findById(id)
+                .orElseThrow(() -> new CompositionNotFoundException(id));
+
+        if (composition.isPicked()) {
+            composition.cancel();
+        }
+
+        return CompositionResponse.build(composition);
 
     }
 

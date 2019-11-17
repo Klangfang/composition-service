@@ -14,9 +14,9 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties
 @Entity
-@Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"compositionId","trackNumber", "startPosition"})
-})
+//@Table(uniqueConstraints={
+    //    @UniqueConstraint(columnNames = {"compositionId","trackNumber", "startPosition"})
+//})
 public class Sound {
 
     @Id
@@ -44,9 +44,9 @@ public class Sound {
     @Column(nullable = false)
     private ZonedDateTime creationTime = ZonedDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "compositionId")
-    private Composition composition;
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "compositionId")
+    //private Composition composition;
 
     public Sound() {
     }
