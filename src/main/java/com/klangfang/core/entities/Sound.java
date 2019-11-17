@@ -5,11 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Objects;
-
-import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
 
 /**
  * Obwohl gleiche Sounds, hinzegefügt werden können. Wir betrachten jeden Sound besonders
@@ -17,6 +14,9 @@ import static com.klangfang.core.common.type.AudioFileType.THREE_GP;
  */
 @JsonIgnoreProperties
 @Entity
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"compositionId","trackNumber", "startPosition"})
+})
 public class Sound {
 
     @Id
@@ -29,9 +29,6 @@ public class Sound {
 
     @Column(nullable = false)
     private String url;
-
-    @Column(nullable = false)
-    private String title = "NOT USED YET in APP";
 
     @Min(0)
     @Column(nullable = false)
@@ -47,13 +44,16 @@ public class Sound {
     @Column(nullable = false)
     private ZonedDateTime creationTime = ZonedDateTime.now();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "compositionId")
+    private Composition composition;
+
     public Sound() {
     }
 
     public Sound(String creatorName, @Min(0) Integer startPosition,
                  @Min(0) int duration, Integer trackNumber, String url) {
 
-        this.title = LocalDateTime.now().toString() + THREE_GP.getName();
         this.creatorName = creatorName;
         this.startPosition = startPosition;
         this.duration = duration;
@@ -80,10 +80,6 @@ public class Sound {
 
     public String getCreatorName() {
         return creatorName;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public Integer getTrackNumber() {

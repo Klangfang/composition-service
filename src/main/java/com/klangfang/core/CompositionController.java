@@ -17,7 +17,6 @@ import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RestController
 @RequestMapping("compositions")
@@ -29,7 +28,7 @@ class CompositionController {
 
 
     @Autowired
-    public CompositionController(CompositionService service) {
+    protected CompositionController(CompositionService service) {
         this.service = service;
     }
 
@@ -58,19 +57,23 @@ class CompositionController {
         CompositionUpdateRequest request = new CompositionUpdateRequest();
 
         return ResponseEntity
-                .created(linkTo(methodOn(CompositionController.class).update(overview.id, request)).toUri())
+                .created(linkTo(methodOn(CompositionController.class)
+                        .update(overview.id, request, UpdateRequest.PICK))
+                        .toUri())
                 .body(overview);
 
     }
 
 
     @PutMapping("/{id}")
-    ResponseEntity<CompositionResponse> update(@PathVariable Long id, @RequestBody CompositionUpdateRequest request) {
+    ResponseEntity<CompositionResponse> update(@PathVariable Long id,
+                                               @RequestBody CompositionUpdateRequest request,
+                                               @RequestParam(defaultValue = "RELEASE") UpdateRequest updateRequest) {
 
         try {
 
             LOG.debug("----> " + request.sounds);
-            return ResponseEntity.ok(isEmpty(request.sounds) ? service.pick(id) : service.release(id, request.sounds));
+            return ResponseEntity.ok(updateRequest.isPick() ? service.pick(id) : service.release(id, request.sounds));
 
         } catch (CompositionNotFoundException e) {
 

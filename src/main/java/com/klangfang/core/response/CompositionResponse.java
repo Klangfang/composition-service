@@ -1,9 +1,8 @@
 package com.klangfang.core.response;
 
 import com.klangfang.core.entities.Composition;
-import com.klangfang.core.entities.type.Status;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +14,9 @@ public class CompositionResponse {
 
     public String creatorName;
 
-    public LocalDateTime creationDate;
+    public ZonedDateTime creationTime;
 
-    public Status status;
+    public String status;
 
     public Integer numberOfMembers;
 
@@ -30,8 +29,8 @@ public class CompositionResponse {
     private CompositionResponse(Long id,
                                 String title,
                                 String creatorName,
-                                LocalDateTime creationDate,
-                                Status status,
+                                ZonedDateTime creationTime,
+                                String status,
                                 Integer numberOfMembers,
                                 Integer duration,
                                 String snippet,
@@ -40,7 +39,7 @@ public class CompositionResponse {
         this.id = id;
         this.title = title;
         this.creatorName = creatorName;
-        this.creationDate = creationDate;
+        this.creationTime = creationTime;
         this.status = status;
         this.numberOfMembers = numberOfMembers;
         this.duration = duration;
@@ -55,7 +54,7 @@ public class CompositionResponse {
                 c.getId(),
                 c.getTitle(),
                 c.getCreatorName(),
-                c.getCreationDate(),
+                c.getCreationTime(),
                 c.getStatus(),
                 c.getNumberOfMembers(),
                 c.getDuration(),

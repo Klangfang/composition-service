@@ -43,7 +43,7 @@ public class CompositionService {
                 .map(s -> s.toEntity(soundUploadComponent.uploadSound(s.soundBytes)))
                 .collect(Collectors.toList());
 
-        Composition composition = new Composition(compositionRequest.title, compositionRequest.creatorName, sounds);
+        Composition composition = new Composition(compositionRequest.title, compositionRequest.creatorName, sounds, 4);
 
         repository.save(composition);
 
@@ -53,7 +53,7 @@ public class CompositionService {
 
 
     public Set<CompositionOverview> loadCompositionsOverview(Integer page, Integer size) {
-        Set<CompositionOverview> overviews = repository.findByStatus(
+        Set<CompositionOverview> overviews = repository.findByStatusOrderByCreationTime(
                 Status.valueOf(Status.AVAILABLE.name()),
                 PageRequest.of(page, size))
                 .stream()
@@ -68,12 +68,13 @@ public class CompositionService {
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
 
-        if (composition.getStatus() == Status.AVAILABLE) {
+        if (composition.isAvailable()) {
             composition.pick();
             return CompositionResponse.build(composition);
         }
 
-        throw new MethodNotAllowedException("pick", composition.getStatus().name());
+        throw new MethodNotAllowedException("pick", composition.getStatus());
+
     }
 
     public CompositionResponse release(Long id, List<SoundRequest> newSounds) throws CompositionNotFoundException {
@@ -81,21 +82,19 @@ public class CompositionService {
         Composition composition = repository.findById(id)
                 .orElseThrow(() -> new CompositionNotFoundException(id));
 
-        if (composition.getStatus() == Status.PICKED) {
-
-            composition.release();
+        if (composition.isPicked()) {
 
             List<Sound> sounds = newSounds.stream()
                     .map(s -> s.toEntity(soundUploadComponent.uploadSound(s.soundBytes)))
                     .collect(Collectors.toList());
 
-            composition.addSounds(sounds);
+            composition.upgrade(sounds);
 
             return CompositionResponse.build(composition);
 
         }
 
-        throw new MethodNotAllowedException("release", composition.getStatus().name());
+        throw new MethodNotAllowedException("release", composition.getStatus());
 
     }
 
