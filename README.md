@@ -1,6 +1,5 @@
 # Composition Service
 ____________________________________________________________________________________________________________________________________________________________________
-
 Welcome to the composition service - the application core system of the klangfang app.<br>
 It provides many functionalities, such as:
 - saving a composition
