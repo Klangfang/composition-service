@@ -19,30 +19,30 @@
     <docker.image.prefix>casasky</docker.image.prefix>
 
     <!-- compiler -->
-    <jdk.version>13</jdk.version>
+    <jdk.version>15</jdk.version>
 
     <!-- dependencies -->
 
     <!-- spring -->
-    <dependencies.spring-boot.version>2.2.1.RELEASE</dependencies.spring-boot.version>
-    <dependencies.spring-data.version>3.2.1.RELEASE</dependencies.spring-data.version>
+    <dependencies.spring-boot.version>2.4.0</dependencies.spring-boot.version>
 
     <!-- cloudinary -->
-    <dependencies.cloudinary.version>1.24.0</dependencies.cloudinary.version>
+    <dependencies.cloudinary.version>1.26.0</dependencies.cloudinary.version>
 
     <!--  hibernate -->
-    <dependencies.hibernate.version>5.4.8.Final</dependencies.hibernate.version>
+    <dependencies.hibernate.version>5.4.23.Final</dependencies.hibernate.version>
 
     <!-- database drivers -->
-    <dependencies.postgresql.version>42.2.8</dependencies.postgresql.version>
-    <dependencies.HikaryCP.version>3.4.1</dependencies.HikaryCP.version>
+    <dependencies.postgresql.version>42.2.16</dependencies.postgresql.version>
+    <dependencies.HikaryCP.version>3.4.5</dependencies.HikaryCP.version>
     <dependencies.h2database.version>1.4.200</dependencies.h2database.version>
 
     <!-- plugins -->
 
     <!-- mvn compiler -->
     <plugins.maven-compiler.version>3.8.1</plugins.maven-compiler.version>
-    <plugins.maven-dependency.version>3.1.1</plugins.maven-dependency.version>
+    <plugins.maven-dependency.version>3.1.2</plugins.maven-dependency.version>
+    <plugins.maven-surefire.version>2.22.2</plugins.maven-surefire.version>
 
   </properties>
 
@@ -79,6 +79,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
+      <version>${dependencies.spring-boot.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
       <version>${dependencies.spring-boot.version}</version>
     </dependency>
 
@@ -186,6 +192,22 @@
             </execution>
           </executions>
         </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <compilerArgs>--enable-preview</compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>--enable-preview</argLine>
+        </configuration>
+      </plugin>
 
     </plugins>
 
@@ -200,6 +222,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>${plugins.maven-dependency.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${plugins.maven-surefire.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
