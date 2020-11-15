@@ -1,11 +1,11 @@
 # Composition Service
 __________________________________________________________________________________________________________________________________________________________________
-Welcome to the composition service - the application core system of the klangfang app.<br>
+Welcome to the composition service - the application core system of the klangfang app.
 It provides many functionalities, such as:
 - saving a composition
 - collaborating with a composition
-- listing all available compositions.
-...<br>
+- listing all available compositions
+- ...
 The klangfang android app is communicating directly with the composition service via rest api.<br>
 The service is actually hosted in heroku.<br>
 <br>
