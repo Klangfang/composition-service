@@ -15,18 +15,18 @@ This project is based on the Spring Boot Framework and Java.<br>
 <br>
 To build this project and run the application without the docker container (i.e. in the host OS):<br>
 ````
-./mvnw package && java -jar target/composition-service-1.0.jar
+mvn clean install && java -jar target/composition-service-1.0.jar
 
 ````
-Building a new tagged docker image:
+Building and Pushing a new tagged docker image:
 ````
-./mvnw install dockerfile:build
+heroku container:push web
 
 ````
 
-Running the tagged docker image:
+Releasing the tagged docker image:
 ````
-docker run -p 8080:8080 -t casasky/composition-service
+heroku container:release web
 
 ````
 
