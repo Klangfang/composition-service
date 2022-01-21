@@ -35,7 +35,7 @@
     <!-- database drivers -->
     <dependencies.postgresql.version>42.2.16</dependencies.postgresql.version>
     <dependencies.HikaryCP.version>3.4.5</dependencies.HikaryCP.version>
-    <dependencies.h2database.version>1.4.200</dependencies.h2database.version>
+    <dependencies.h2database.version>2.1.210</dependencies.h2database.version>
 
     <!-- plugins -->
 
