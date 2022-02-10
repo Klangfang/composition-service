@@ -30,7 +30,7 @@
     <dependencies.cloudinary.version>1.26.0</dependencies.cloudinary.version>
 
     <!--  hibernate -->
-    <dependencies.hibernate.version>5.4.23.Final</dependencies.hibernate.version>
+    <dependencies.hibernate.version>5.4.24.Final</dependencies.hibernate.version>
 
     <!-- database drivers -->
     <dependencies.postgresql.version>42.2.16</dependencies.postgresql.version>
