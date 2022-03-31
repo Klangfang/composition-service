@@ -24,7 +24,7 @@
     <!-- dependencies -->
 
     <!-- spring -->
-    <dependencies.spring-boot.version>2.4.0</dependencies.spring-boot.version>
+    <dependencies.spring-boot.version>2.5.12</dependencies.spring-boot.version>
 
     <!-- cloudinary -->
     <dependencies.cloudinary.version>1.26.0</dependencies.cloudinary.version>
