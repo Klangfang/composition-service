@@ -33,7 +33,7 @@
     <dependencies.hibernate.version>5.4.23.Final</dependencies.hibernate.version>
 
     <!-- database drivers -->
-    <dependencies.postgresql.version>42.2.16</dependencies.postgresql.version>
+    <dependencies.postgresql.version>42.4.1</dependencies.postgresql.version>
     <dependencies.HikaryCP.version>3.4.5</dependencies.HikaryCP.version>
     <dependencies.h2database.version>1.4.200</dependencies.h2database.version>
 
